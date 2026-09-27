@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import LoginScreen from './src/screens/LoginScreen';
 
 export default function App() {
@@ -7,20 +8,18 @@ export default function App() {
   const [userEmail, setUserEmail] = useState('');
 
   const handleLogin = (email: string, password: string) => {
-    // TODO: Integrar con API
     setUserEmail(email);
     setIsLoggedIn(true);
   };
 
   return (
-    <>
+    <SafeAreaProvider>
       {!isLoggedIn ? (
         <LoginScreen onLogin={handleLogin} />
       ) : (
-        // HomeScreen aquí próximamente
         <></>
       )}
       <StatusBar style="auto" />
-    </>
+    </SafeAreaProvider>
   );
 }

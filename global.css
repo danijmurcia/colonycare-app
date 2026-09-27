@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .safe-area {
+    @apply flex-1 bg-slate-50;
+  }
+  .card {
+    @apply bg-white rounded-lg p-4 shadow;
+  }
+}
