@@ -47,7 +47,8 @@ export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProp
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.emoji}>🐱</Text>
           <Text style={styles.title}>ColonyCare</Text>
@@ -124,6 +125,7 @@ export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProp
           </TouchableOpacity>
         </View>
       </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
 import { Formik } from 'formik';
@@ -49,7 +49,8 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text style={styles.emoji}>🐱</Text>
           <Text style={styles.title}>Crear cuenta</Text>
@@ -100,6 +101,7 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
