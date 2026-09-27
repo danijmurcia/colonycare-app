@@ -5,17 +5,15 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { authService } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 
 interface LoginScreenProps {
-  onLogin: () => void;
   onGoToRegister: () => void;
 }
 
@@ -28,8 +26,10 @@ const loginSchema = Yup.object().shape({
     .required("La contraseña es requerida"),
 });
 
-export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProps) {
+export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
   const toast = useToast();
+
+  const { login } = useAuth();
 
   const handleLoginSubmit = async (
     values: { email: string; password: string },
@@ -37,10 +37,11 @@ export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProp
   ) => {
     try {
       const response = await authService.login(values.email, values.password);
+      console.log(response);
+      await login(response.data.access_token);
       toast.show(response.message, { type: "success", duration: 2000 });
-      onLogin();
     } catch (error: any) {
-      const errorMsg = error.response?.data?.detail || "Error en el login";
+      const errorMsg = error.response?.data?.message || "Error en el login";
       toast.show(errorMsg, { type: "danger", duration: 2000 });
     } finally {
       setSubmitting(false);
@@ -49,8 +50,7 @@ export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProp
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.content}>
+      <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.emoji}>🐱</Text>
           <Text style={styles.title}>ColonyCare</Text>
@@ -127,7 +127,6 @@ export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProp
           </TouchableOpacity>
         </View>
       </View>
-      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

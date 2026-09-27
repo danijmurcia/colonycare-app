@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
 import { Formik } from 'formik';
@@ -49,8 +49,7 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text style={styles.emoji}>🐱</Text>
           <Text style={styles.title}>Crear cuenta</Text>
@@ -65,15 +64,15 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
             <View>
               <Text style={styles.label}>Nombre</Text>
-              <TextInput style={[styles.input, touched.first_name && errors.first_name && styles.inputError]} placeholder="Tu nombre" placeholderTextColor="#aaa" value={values.first_name} onChangeText={handleChange('first_name')} onBlur={handleBlur('first_name')} />
+              <TextInput style={[styles.input, touched.first_name && errors.first_name && styles.inputError]} placeholder="Introduce tu nombre" placeholderTextColor="#aaa" value={values.first_name} onChangeText={handleChange('first_name')} onBlur={handleBlur('first_name')} />
               {touched.first_name && errors.first_name && <Text style={styles.error}>⚠ {errors.first_name}</Text>}
 
               <Text style={styles.label}>Apellido</Text>
-              <TextInput style={[styles.input, touched.last_name && errors.last_name && styles.inputError]} placeholder="Tu apellido" placeholderTextColor="#aaa" value={values.last_name} onChangeText={handleChange('last_name')} onBlur={handleBlur('last_name')} />
+              <TextInput style={[styles.input, touched.last_name && errors.last_name && styles.inputError]} placeholder="Introduce tus apellidos" placeholderTextColor="#aaa" value={values.last_name} onChangeText={handleChange('last_name')} onBlur={handleBlur('last_name')} />
               {touched.last_name && errors.last_name && <Text style={styles.error}>⚠ {errors.last_name}</Text>}
 
               <Text style={styles.label}>Email</Text>
-              <TextInput style={[styles.input, touched.email && errors.email && styles.inputError]} placeholder="tu@email.com" placeholderTextColor="#aaa" value={values.email} onChangeText={handleChange('email')} onBlur={handleBlur('email')} keyboardType="email-address" autoCapitalize="none" />
+              <TextInput style={[styles.input, touched.email && errors.email && styles.inputError]} placeholder="Introduce tu email (your@mail.com)" placeholderTextColor="#aaa" value={values.email} onChangeText={handleChange('email')} onBlur={handleBlur('email')} keyboardType="email-address" autoCapitalize="none" />
               {touched.email && errors.email && <Text style={styles.error}>⚠ {errors.email}</Text>}
 
               <Text style={styles.label}>Teléfono (opcional)</Text>
@@ -101,7 +100,6 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
           </TouchableOpacity>
         </View>
       </ScrollView>
-      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

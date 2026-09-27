@@ -1,15 +1,19 @@
 import httpManager from './HttpManager';
 
 export interface LoginResponse {
+  success: boolean;
   message: string;
-  user_id: number;
+  data: {
+    access_token: string;
+    token_type: string;
+  };
 }
 
 export interface RegisterRequest {
   email: string;
   password: string;
-  first_name: string;
-  last_name: string;
+  first_name?: string;
+  last_name?: string;
   phone?: string;
 }
 
@@ -20,7 +24,6 @@ export interface RegisterResponse {
   last_name: string;
   phone?: string;
   is_active: boolean;
-  created_at: string;
 }
 
 export const authService = {

@@ -19,4 +19,12 @@ httpManager.interceptors.response.use(
   }
 );
 
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    httpManager.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete httpManager.defaults.headers.common['Authorization'];
+  }
+};
+
 export default httpManager;

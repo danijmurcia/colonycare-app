@@ -11,6 +11,9 @@
     "android": {
       "predictiveBackGestureEnabled": false
     },
-    "web": {}
+    "web": {},
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }
