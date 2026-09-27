@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
@@ -37,11 +39,10 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
   ) => {
     try {
       const response = await authService.login(values.email, values.password);
-      console.log(response);
       await login(response.data.access_token);
       toast.show(response.message, { type: "success", duration: 2000 });
     } catch (error: any) {
-      const errorMsg = error.response?.data?.message || "Error en el login";
+      const errorMsg = error.response?.data?.message || error.message || "Error en el login";
       toast.show(errorMsg, { type: "danger", duration: 2000 });
     } finally {
       setSubmitting(false);
@@ -50,7 +51,8 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.emoji}>🐱</Text>
           <Text style={styles.title}>ColonyCare</Text>
@@ -126,7 +128,8 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
             <Text style={styles.link}>Regístrate</Text>
           </TouchableOpacity>
         </View>
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

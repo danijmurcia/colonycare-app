@@ -1,2 +1,2 @@
-export const API_BASE_URL = 'http://localhost:8000';
-// Para móvil real, cambia a tu IP: 'http://192.168.X.X:8000'
+export const API_BASE_URL = "https://aluminum-stool-pranker.ngrok-free.dev"; // 👈 REEMPLAZA CON TU URL DE NGROK
+// Obtén la URL ejecutando: npx ngrok http 8000
