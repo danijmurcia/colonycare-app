@@ -14,6 +14,7 @@ import { authService } from "../services/authService";
 
 interface LoginScreenProps {
   onLogin: () => void;
+  onGoToRegister: () => void;
 }
 
 const loginSchema = Yup.object().shape({
@@ -25,7 +26,7 @@ const loginSchema = Yup.object().shape({
     .required("La contraseña es requerida"),
 });
 
-export default function LoginScreen({ onLogin }: LoginScreenProps) {
+export default function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProps) {
   const toast = useToast();
 
   const handleLoginSubmit = async (
@@ -118,7 +119,9 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>¿No tienes cuenta? </Text>
-          <Text style={styles.link}>Regístrate</Text>
+          <TouchableOpacity onPress={onGoToRegister}>
+            <Text style={styles.link}>Regístrate</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
