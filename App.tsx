@@ -1,31 +1,26 @@
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import LoginScreen from './src/screens/LoginScreen';
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+  const handleLogin = (email: string, password: string) => {
+    // TODO: Integrar con API
+    setUserEmail(email);
+    setIsLoggedIn(true);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ColonyCare 🐱</Text>
-      <Text style={styles.subtitle}>Gestión de colonias felinas</Text>
+    <>
+      {!isLoggedIn ? (
+        <LoginScreen onLogin={handleLogin} />
+      ) : (
+        // HomeScreen aquí próximamente
+        <></>
+      )}
       <StatusBar style="auto" />
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#1A1A2E',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-  },
-});
