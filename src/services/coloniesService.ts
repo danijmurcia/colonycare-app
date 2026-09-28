@@ -67,6 +67,10 @@ export const coloniesService = {
     return response.data.data;
   },
 
+  delete: async (id: number): Promise<void> => {
+    await httpManager.delete('/colonies/' + id);
+  },
+
   getVisits: async (colonyId: number): Promise<Visit[]> => {
     const response = await httpManager.get<ApiResponse<Visit[]>>('/colonies/' + colonyId + '/visits');
     return response.data.data;
