@@ -127,34 +127,34 @@ export default function HomeScreen() {
         {/* STATS PRINCIPALES */}
         <View className="flex-row gap-4 px-6 py-5">
           <TouchableOpacity
-            className="flex-1 bg-white rounded-xl p-6 items-center shadow"
+            className="flex-1 bg-white rounded-xl p-5 items-center shadow"
             onPress={() =>
               navigation.navigate("colonies", { screen: "colonies-list" })
             }
           >
-            <Text className="text-2xl mb-1">🏘️</Text>
-            <Text className="text-xl font-black text-[#1A1A2E]">
+            <Text className="text-3xl mb-2">🏘️</Text>
+            <Text className="text-2xl font-black text-[#1A1A2E]">
               {colonies.length}
             </Text>
-            <Text className="text-xs text-gray-500 font-semibold">
+            <Text className="text-sm text-gray-500 font-semibold mt-1">
               Colonias
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 bg-white rounded-xl p-4 items-center shadow">
-            <Text className="text-2xl mb-1">🐱</Text>
-            <Text className="text-xl font-black text-[#1A1A2E]">
+          <TouchableOpacity className="flex-1 bg-white rounded-xl p-5 items-center shadow">
+            <Text className="text-3xl mb-2">🐱</Text>
+            <Text className="text-2xl font-black text-[#1A1A2E]">
               {totalGatos}
             </Text>
-            <Text className="text-xs text-gray-500 font-semibold">
+            <Text className="text-sm text-gray-500 font-semibold mt-1">
               Gatos Totales
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 bg-white rounded-xl p-4 items-center shadow">
-            <Text className="text-2xl mb-1">⚠️</Text>
-            <Text className="text-xl font-black text-[#1A1A2E]">
+          <TouchableOpacity className="flex-1 bg-white rounded-xl p-5 items-center shadow">
+            <Text className="text-3xl mb-2">⚠️</Text>
+            <Text className="text-2xl font-black text-[#1A1A2E]">
               {dailyPending.length + overduePending.length}
             </Text>
-            <Text className="text-xs text-gray-500 font-semibold">
+            <Text className="text-sm text-gray-500 font-semibold mt-1">
               Pendientes
             </Text>
           </TouchableOpacity>
@@ -166,15 +166,15 @@ export default function HomeScreen() {
             📋 Visitas Pendientes
           </Text>
           {/* Tabs */}
-          <View className="flex-row gap-2 mb-3">
+          <View className="flex-row gap-3 mb-4">
             <TouchableOpacity
-              className={`flex-1 py-2.5 px-3 rounded-xl items-center ${
+              className={`flex-1 py-3.5 px-4 rounded-xl items-center ${
                 pendingTab === "daily" ? "bg-[#E85D04]" : "bg-gray-100"
               }`}
               onPress={() => handleTabChange("daily")}
             >
               <Text
-                className={`text-sm font-bold ${
+                className={`text-base font-bold ${
                   pendingTab === "daily" ? "text-white" : "text-gray-500"
                 }`}
               >
@@ -182,14 +182,14 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`flex-1 py-2.5 px-3 rounded-xl items-center ${
+              className={`flex-1 py-3.5 px-4 rounded-xl items-center ${
                 pendingTab === "overdue" ? "bg-[#E85D04]" : "bg-gray-100"
               }`}
               onPress={() => handleTabChange("overdue")}
               disabled={loadingOverdue}
             >
               <Text
-                className={`text-sm font-bold ${
+                className={`text-base font-bold ${
                   pendingTab === "overdue" ? "text-white" : "text-gray-500"
                 }`}
               >
@@ -204,7 +204,7 @@ export default function HomeScreen() {
             .map((c) => (
               <TouchableOpacity
                 key={c.id}
-                className={`flex-row items-center bg-white rounded-xl p-3 mb-2 border-l-4 ${
+                className={`flex-row items-center bg-white rounded-xl p-4 mb-3 border-l-4 ${
                   pendingTab === "overdue"
                     ? "border-red-500"
                     : "border-orange-500"
@@ -217,21 +217,21 @@ export default function HomeScreen() {
                 }
               >
                 <Text
-                  className={`text-xl w-9 h-9 rounded-lg text-center leading-9 mr-3 ${
+                  className={`text-2xl w-11 h-11 rounded-lg text-center leading-[44px] mr-3 ${
                     pendingTab === "overdue" ? "bg-red-100" : "bg-orange-50"
                   }`}
                 >
                   {pendingTab === "overdue" ? "🔴" : "📌"}
                 </Text>
                 <View className="flex-1">
-                  <Text className="text-sm font-bold text-[#1A1A2E]">
+                  <Text className="text-base font-bold text-[#1A1A2E]">
                     {c.name}
                   </Text>
-                  <Text className="text-xs text-gray-500">
+                  <Text className="text-sm text-gray-500 mt-0.5">
                     📍 {c.location} • 🐱 {c.estimated_cats} gatos
                   </Text>
                 </View>
-                <Text className="text-2xl text-gray-400">›</Text>
+                <Text className="text-3xl text-gray-400">›</Text>
               </TouchableOpacity>
             ))}
           {(pendingTab === "daily" ? dailyPending : overduePending).length ===
@@ -266,32 +266,32 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
             {/* Fila superior: 3 números */}
-            <View className="flex-row justify-around py-4">
+            <View className="flex-row justify-around py-5">
               <View className="flex-1 items-center">
-                <Text className="text-2xl font-black text-[#E85D04]">
+                <Text className="text-3xl font-black text-[#E85D04]">
                   {stats.total_visits || 0}
                 </Text>
-                <Text className="text-xs text-gray-500 font-semibold mt-1">
+                <Text className="text-sm text-gray-500 font-semibold mt-1">
                   Visitas
                 </Text>
               </View>
               <View className="w-px bg-gray-100" />
               <View className="flex-1 items-center">
-                <Text className="text-2xl font-black text-[#E85D04]">
+                <Text className="text-3xl font-black text-[#E85D04]">
                   {stats.total_colonies || 0}
                 </Text>
-                <Text className="text-xs text-gray-500 font-semibold mt-1">
+                <Text className="text-sm text-gray-500 font-semibold mt-1">
                   Colonias
                 </Text>
               </View>
               <View className="w-px bg-gray-100" />
               <View className="flex-1 items-center">
-                <Text className="text-2xl font-black text-[#E85D04]">
+                <Text className="text-3xl font-black text-[#E85D04]">
                   {stats.total_colonies
                     ? Math.round(stats.total_visits / stats.total_colonies)
                     : 0}
                 </Text>
-                <Text className="text-xs text-gray-500 font-semibold mt-1">
+                <Text className="text-sm text-gray-500 font-semibold mt-1">
                   Promedio de visitas
                 </Text>
               </View>
@@ -302,19 +302,19 @@ export default function HomeScreen() {
 
             {/* Colonia más visitada */}
             {stats.most_visited && (
-              <View className="flex-row items-center gap-3 mb-3">
-                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">
+              <View className="flex-row items-center gap-3 mb-4">
+                <Text className="text-3xl w-12 h-12 bg-orange-50 rounded-lg text-center leading-[48px]">
                   🏆
                 </Text>
                 <View className="flex-1">
                   <Text className="text-xs font-semibold text-gray-400 mb-0.5">
                     Colonia más visitada
                   </Text>
-                  <Text className="text-sm font-bold text-[#1A1A2E]">
+                  <Text className="text-base font-bold text-[#1A1A2E]">
                     {stats.most_visited.name}
                   </Text>
                 </View>
-                <Text className="bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                <Text className="bg-orange-50 text-orange-600 text-sm font-bold px-3 py-1.5 rounded-full">
                   {stats.most_visited.count} visitas
                 </Text>
               </View>
@@ -323,18 +323,18 @@ export default function HomeScreen() {
             {/* Última visita */}
             {stats.last_visit && (
               <View className="flex-row items-center gap-3">
-                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">
+                <Text className="text-3xl w-12 h-12 bg-orange-50 rounded-lg text-center leading-[48px]">
                   🕒
                 </Text>
                 <View className="flex-1">
                   <Text className="text-xs font-semibold text-gray-400 mb-0.5">
                     Fecha última visita
                   </Text>
-                  <Text className="text-sm font-bold text-[#1A1A2E]">
+                  <Text className="text-base font-bold text-[#1A1A2E]">
                     {stats.last_visit.colony}
                   </Text>
                 </View>
-                <Text className="text-xs font-semibold text-gray-500 text-right">
+                <Text className="text-sm font-semibold text-gray-500 text-right">
                   {new Date(stats.last_visit.date).toLocaleDateString("es-ES", {
                     day: "2-digit",
                     month: "short",
