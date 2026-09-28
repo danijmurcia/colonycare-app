@@ -12,10 +12,7 @@ const validationSchema = Yup.object().shape({
     .typeError('Debe ser un número')
     .min(0, 'No puede ser negativo')
     .required('El número de gatos es obligatorio'),
-  food_grams: Yup.number()
-    .typeError('Debe ser un número')
-    .min(0, 'No puede ser negativo')
-    .required('Los gramos de pienso son obligatorios'),
+  food_grams: Yup.string().nullable(),
   wet_food_cans: Yup.number()
     .typeError('Debe ser un número')
     .min(0, 'No puede ser negativo')
