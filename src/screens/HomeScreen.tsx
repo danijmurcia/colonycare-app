@@ -17,6 +17,7 @@ import { TabParamList, ColoniesStackParamList } from "../navigation/types";
 import { useAuth } from "../context/AuthContext";
 import { coloniesService, Colony } from "../services/coloniesService";
 import { useUserStats } from "../hooks/useUserStats";
+import { usePendingColonies } from "../hooks/usePendingColonies";
 
 export default function HomeScreen() {
   const { logout } = useAuth();
@@ -26,24 +27,31 @@ export default function HomeScreen() {
   >;
   const navigation = useNavigation<HomeNavProp>();
   const [colonies, setColonies] = useState<Colony[]>([]);
-  const [pending, setPending] = useState<Colony[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [pendingTab, setPendingTab] = useState<'daily' | 'overdue'>('daily');
   const { stats } = useUserStats();
+  const { dailyPending, overduePending, loadingDaily, loadingOverdue, fetchDaily, fetchOverdue } = usePendingColonies();
 
   const fetchData = async () => {
     try {
-      const [allColonies, pendingColonies] = await Promise.all([
-        coloniesService.getAll(),
-        coloniesService.getPending(3),
-      ]);
+      const allColonies = await coloniesService.getAll();
       setColonies(allColonies);
-      setPending(pendingColonies);
+      await fetchDaily();
     } catch (e) {
       console.error("Error cargando datos:", e);
     } finally {
       setLoading(false);
       setRefreshing(false);
+    }
+  };
+
+  const handleTabChange = (tab: 'daily' | 'overdue') => {
+    setPendingTab(tab);
+    if (tab === 'daily') {
+      fetchDaily();
+    } else {
+      fetchOverdue();
     }
   };
 
@@ -119,19 +127,40 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity style={styles.mainStatCard}>
             <Text style={styles.mainStatIcon}>⚠️</Text>
-            <Text style={styles.mainStatNumber}>{pending.length}</Text>
+            <Text style={styles.mainStatNumber}>{dailyPending.length + overduePending.length}</Text>
             <Text style={styles.mainStatLabel}>Pendientes</Text>
           </TouchableOpacity>
         </View>
 
-        {/* PENDIENTES - PRIMERO */}
-        {pending.length > 0 && (
+        {/* PENDIENTES CON TABS */}
+        {(dailyPending.length > 0 || overduePending.length > 0) && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>📋 Visitas Pendientes</Text>
-            {pending.slice(0, 3).map((c) => (
+            {/* Tabs */}
+            <View style={styles.tabsRow}>
+              <TouchableOpacity
+                style={[styles.tabBtn, pendingTab === 'daily' && styles.tabBtnActive]}
+                onPress={() => handleTabChange('daily')}
+              >
+                <Text style={[styles.tabBtnText, pendingTab === 'daily' && styles.tabBtnTextActive]}>
+                  📅 Hoy  {dailyPending.length > 0 && <Text style={styles.tabBadge}>{dailyPending.length}</Text>}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tabBtn, pendingTab === 'overdue' && styles.tabBtnActive]}
+                onPress={() => handleTabChange('overdue')}
+                disabled={loadingOverdue}
+              >
+                <Text style={[styles.tabBtnText, pendingTab === 'overdue' && styles.tabBtnTextActive]}>
+                  {loadingOverdue ? '⏳' : '⚠️'} 2+ días  {overduePending.length > 0 && <Text style={styles.tabBadge}>{overduePending.length}</Text>}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* Lista según tab activo */}
+            {(pendingTab === 'daily' ? dailyPending : overduePending).slice(0, 4).map((c) => (
               <TouchableOpacity
                 key={c.id}
-                style={styles.pendingCardNew}
+                style={[styles.pendingCardNew, pendingTab === 'overdue' && styles.pendingCardOverdue]}
                 onPress={() =>
                   navigation.navigate("colonies", {
                     screen: "colony-detail",
@@ -139,7 +168,9 @@ export default function HomeScreen() {
                   })
                 }
               >
-                <Text style={styles.pendingIconBox}>📌</Text>
+                <Text style={[styles.pendingIconBox, pendingTab === 'overdue' && styles.pendingIconBoxOverdue]}>
+                  {pendingTab === 'overdue' ? '🔴' : '📌'}
+                </Text>
                 <View style={styles.pendingInfo}>
                   <Text style={styles.pendingName}>{c.name}</Text>
                   <Text style={styles.pendingDetail}>📍 {c.location} • 🐱 {c.estimated_cats} gatos</Text>
@@ -147,6 +178,11 @@ export default function HomeScreen() {
                 <Text style={styles.pendingArrow}>›</Text>
               </TouchableOpacity>
             ))}
+            {(pendingTab === 'daily' ? dailyPending : overduePending).length === 0 && (
+              <View style={styles.emptyTab}>
+                <Text style={styles.emptyTabText}>✅ Sin pendientes en esta categoría</Text>
+              </View>
+            )}
           </View>
         )}
 
@@ -247,4 +283,14 @@ const styles = StyleSheet.create({
   myResumenRowValue: { fontSize: 14, fontWeight: "700", color: "#1A1A2E" },
   myResumenRowBadge: { backgroundColor: "#FFF0E8", color: "#E85D04", fontSize: 12, fontWeight: "700", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, overflow: "hidden" },
   myResumenRowDate: { fontSize: 12, fontWeight: "600", color: "#999", textAlign: "right" },
+  tabsRow: { flexDirection: "row", gap: 8, marginBottom: 14 },
+  tabBtn: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, backgroundColor: "#F0F0F0", alignItems: "center" },
+  tabBtnActive: { backgroundColor: "#E85D04" },
+  tabBtnText: { fontSize: 13, fontWeight: "700", color: "#999" },
+  tabBtnTextActive: { color: "#FFF" },
+  tabBadge: { fontSize: 12, fontWeight: "800", color: "inherit" },
+  pendingCardOverdue: { borderLeftColor: "#FF3B30" },
+  pendingIconBoxOverdue: { backgroundColor: "#FFE0E0" },
+  emptyTab: { paddingVertical: 20, alignItems: "center" },
+  emptyTabText: { fontSize: 14, color: "#AAA", fontWeight: "600" },
 });

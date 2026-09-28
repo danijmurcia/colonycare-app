@@ -47,8 +47,10 @@ export const coloniesService = {
     return response.data.data;
   },
 
-  getPending: async (days: number = 3): Promise<Colony[]> => {
-    const response = await httpManager.get<ApiResponse<Colony[]>>('/colonies/pending?days=' + days);
+  getPending: async (minDays: number = 1, maxDays?: number): Promise<Colony[]> => {
+    const params = new URLSearchParams({ min_days: String(minDays) });
+    if (maxDays !== undefined) params.append('max_days', String(maxDays));
+    const response = await httpManager.get<ApiResponse<Colony[]>>(`/colonies/pending?${params.toString()}`);
     return response.data.data;
   },
 
