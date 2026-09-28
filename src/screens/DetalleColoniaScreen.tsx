@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -14,14 +14,10 @@ export default function DetalleColoniaScreen() {
   const [visits, setVisits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadColonyData();
-  }, [colonyId]);
-
   useFocusEffect(
     React.useCallback(() => {
       loadColonyData();
-    }, [colonyId])
+    }, [])
   );
 
   const loadColonyData = async () => {

@@ -20,7 +20,7 @@ function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
 
 function ColoniesStackNavigator() {
   return (
-    <ColoniesStack.Navigator screenOptions={{ headerShown: false }}>
+    <ColoniesStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="colonies-list">
       <ColoniesStack.Screen name="colonies-list" component={ColoniasScreen} />
       <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
       <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
