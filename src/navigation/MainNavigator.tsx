@@ -1,14 +1,28 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import ColoniasScreen from '../screens/ColoniasScreen';
+import DetalleColoniaScreen from '../screens/DetalleColoniaScreen';
+import ColoniaCreateScreen from '../screens/ColoniaCreateScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
+const ColoniesStack = createNativeStackNavigator();
 
 function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
   return <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>{icon}</Text>;
+}
+
+function ColoniesStackNavigator() {
+  return (
+    <ColoniesStack.Navigator screenOptions={{ headerShown: false }}>
+      <ColoniesStack.Screen name="colonies-list" component={ColoniasScreen} />
+      <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
+      <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
+    </ColoniesStack.Navigator>
+  );
 }
 
 export default function MainNavigator() {
@@ -39,7 +53,7 @@ export default function MainNavigator() {
       />
       <Tab.Screen
         name="colonies"
-        component={ColoniasScreen}
+        component={ColoniesStackNavigator}
         options={{
           tabBarLabel: 'Colonias',
           tabBarIcon: ({ focused }) => <TabIcon icon="🐱" focused={focused} />,
