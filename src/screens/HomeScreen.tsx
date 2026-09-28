@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
   ActivityIndicator,
   RefreshControl,
@@ -79,16 +78,16 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color="#E85D04" style={{ flex: 1 }} />
+      <SafeAreaView className="flex-1 bg-slate-50">
+        <ActivityIndicator size="large" color="#E85D04" className="flex-1" />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-slate-50">
       <ScrollView
-        style={styles.scrollView}
+        className="flex-1"
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -99,14 +98,14 @@ export default function HomeScreen() {
         }
       >
         {/* HEADER MEJORADO */}
-        <View style={styles.headerGradient}>
-          <View style={styles.headerContent}>
+        <View className="bg-orange-50 px-6 py-4">
+          <View>
             <View>
-              <Text style={styles.greeting}>🐱 ColonyCare</Text>
-              <Text style={styles.headerSubtitle}>
+              <Text className="text-2xl font-bold text-orange-600 mb-1">🐱 ColonyCare</Text>
+              <Text className="text-sm text-gray-600 mb-3">
                 Sistema de gestión felina
               </Text>
-              <Text style={styles.date}>
+              <Text className="text-xs text-gray-500">
                 {new Date().toLocaleDateString("es-ES", {
                   weekday: "long",
                   day: "numeric",
@@ -244,9 +243,9 @@ export default function HomeScreen() {
 
         {/* MI RESUMEN - CARD COMPLETO */}
         {stats && (
-          <View style={styles.myResumenCard}>
-            <View style={styles.myResumenTitleRow}>
-              <Text style={styles.myResumenTitle}>📊 Mi Resumen</Text>
+          <View className="bg-white rounded-lg p-4 shadow m-6">
+            <View className="flex-row justify-between items-center">
+              <Text className="text-base font-black text-[#1A1A2E]">📊 Mi Resumen</Text>
               <TouchableOpacity
                 onPress={() => setShowStatsInfo(true)}
                 className="w-8 h-8 rounded-full bg-orange-100 items-center justify-center"
@@ -285,17 +284,13 @@ export default function HomeScreen() {
 
             {/* Colonia más visitada */}
             {stats.most_visited && (
-              <View style={styles.myResumenRow}>
-                <Text style={styles.myResumenRowIcon}>🏆</Text>
-                <View style={styles.myResumenRowInfo}>
-                  <Text style={styles.myResumenRowLabel}>
-                    Colonia más visitada
-                  </Text>
-                  <Text style={styles.myResumenRowValue}>
-                    {stats.most_visited.name}
-                  </Text>
+              <View className="flex-row items-center gap-3 mb-3">
+                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">🏆</Text>
+                <View className="flex-1">
+                  <Text className="text-xs font-semibold text-gray-400 mb-0.5">Colonia más visitada</Text>
+                  <Text className="text-sm font-bold text-[#1A1A2E]">{stats.most_visited.name}</Text>
                 </View>
-                <Text style={styles.myResumenRowBadge}>
+                <Text className="bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">
                   {stats.most_visited.count} visitas
                 </Text>
               </View>
