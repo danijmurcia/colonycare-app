@@ -5,7 +5,10 @@
 - Bottom tabs: Home, Colonies, Profile
 - Deep navigation mediante route params tipados en `types.ts`
 - Siempre incluir botón volver (goBack)
-- Usar `listeners` en Tab.Screen para resets del stack
+- Usar `listeners` en Tab.Screen para resets del stack:
+  - **Patrón:** `setTimeout(() => reset(), 100)` en tabPress listener
+  - Permite que la navegación ocurra primero, luego resetea el stack
+  - Necesario para stacks anidados dentro de tabs
 
 ## 🎨 Componentes
 - Screens en `src/screens/`
