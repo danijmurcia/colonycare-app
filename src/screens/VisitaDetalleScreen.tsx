@@ -67,6 +67,20 @@ export default function VisitaDetalleScreen() {
             <Text style={styles.notesText}>{visit.notes}</Text>
           </View>
         )}
+
+        <View style={styles.card}>
+          <Text style={styles.label}>👤 Registrado por</Text>
+          <Text style={styles.value}>
+            {visit.user
+              ? (visit.user.first_name || visit.user.last_name)
+                ? `${visit.user.first_name ?? ''} ${visit.user.last_name ?? ''}`.trim()
+                : visit.user.email
+              : 'Desconocido'}
+          </Text>
+          {visit.user?.first_name || visit.user?.last_name ? (
+            <Text style={styles.subValue}>{visit.user.email}</Text>
+          ) : null}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -86,4 +100,5 @@ const styles = StyleSheet.create({
   value: { fontSize: 20, fontWeight: '800', color: '#E85D04' },
   notesText: { fontSize: 14, color: '#666', lineHeight: 20 },
   error: { fontSize: 14, color: '#999', textAlign: 'center', marginTop: 20 },
+  subValue: { fontSize: 12, color: '#999', marginTop: 4 },
 });
