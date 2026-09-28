@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
@@ -52,68 +52,46 @@ export default function NewVisitScreen() {
     }
   };
 
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <View className="flex-row justify-between items-center px-4 py-3">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtn}>← Volver</Text>
+          <Text className="text-base text-[#E85D04] font-bold">← Volver</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Nueva visita</Text>
+        <Text className="text-lg font-black text-[#1A1A2E]">Nueva visita</Text>
         <View />
       </View>
       <Formik initialValues={{ cats_seen: '', food_grams: '', wet_food_cans: '', notes: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ handleChange, handleSubmit: submit, values, errors, touched, isSubmitting }) => (
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
-            <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
-              <Text style={styles.label}>Gatos vistos *</Text>
-              <TextInput
-                style={[styles.input, touched.cats_seen && errors.cats_seen ? styles.inputError : null]}
-                placeholder="0"
-                keyboardType="number-pad"
-                value={values.cats_seen}
-                onChangeText={handleChange('cats_seen')}
-              />
-              {touched.cats_seen && errors.cats_seen && <Text style={styles.error}>{String(errors.cats_seen)}</Text>}
-              <Text style={styles.label}>Pienso seco (gramos) *</Text>
-              <View style={styles.toggleRow}>
-                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 200 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 200 ? null : 200)}>
-                  <Text style={[styles.toggleText, foodGrams === 200 && styles.toggleTextActive]}>200g</Text>
+            <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
+              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Gatos vistos *</Text>
+              <TextInput className={`bg-white rounded-lg border-2 px-3 py-3 mb-2 text-base text-[#1A1A2E]${touched.cats_seen && errors.cats_seen ? ' border-red-600' : ' border-gray-300'}`} placeholder="0" keyboardType="number-pad" value={values.cats_seen} onChangeText={handleChange('cats_seen')} />
+              {touched.cats_seen && errors.cats_seen && <Text className="text-red-600 text-sm mb-2">{String(errors.cats_seen)}</Text>}
+              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Pienso seco (gramos) *</Text>
+              <View className="flex-row gap-3 mb-4">
+                <TouchableOpacity className={`flex-1 rounded-lg border-2 py-2.5 items-center${foodGrams === 200 ? ' bg-[#E85D04] border-[#E85D04]' : ' bg-white border-gray-300'}`} onPress={() => setFoodGrams(foodGrams === 200 ? null : 200)}>
+                  <Text className={`text-base font-semibold${foodGrams === 200 ? ' text-white' : ' text-gray-600'}`}>200g</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 300 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 300 ? null : 300)}>
-                  <Text style={[styles.toggleText, foodGrams === 300 && styles.toggleTextActive]}>300g</Text>
+                <TouchableOpacity className={`flex-1 rounded-lg border-2 py-2.5 items-center${foodGrams === 300 ? ' bg-[#E85D04] border-[#E85D04]' : ' bg-white border-gray-300'}`} onPress={() => setFoodGrams(foodGrams === 300 ? null : 300)}>
+                  <Text className={`text-base font-semibold${foodGrams === 300 ? ' text-white' : ' text-gray-600'}`}>300g</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 500 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 500 ? null : 500)}>
-                  <Text style={[styles.toggleText, foodGrams === 500 && styles.toggleTextActive]}>500g</Text>
+                <TouchableOpacity className={`flex-1 rounded-lg border-2 py-2.5 items-center${foodGrams === 500 ? ' bg-[#E85D04] border-[#E85D04]' : ' bg-white border-gray-300'}`} onPress={() => setFoodGrams(foodGrams === 500 ? null : 500)}>
+                  <Text className={`text-base font-semibold${foodGrams === 500 ? ' text-white' : ' text-gray-600'}`}>500g</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 1000 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 1000 ? null : 1000)}>
-                  <Text style={[styles.toggleText, foodGrams === 1000 && styles.toggleTextActive]}>1kg</Text>
+                <TouchableOpacity className={`flex-1 rounded-lg border-2 py-2.5 items-center${foodGrams === 1000 ? ' bg-[#E85D04] border-[#E85D04]' : ' bg-white border-gray-300'}`} onPress={() => setFoodGrams(foodGrams === 1000 ? null : 1000)}>
+                  <Text className={`text-base font-semibold${foodGrams === 1000 ? ' text-white' : ' text-gray-600'}`}>1kg</Text>
                 </TouchableOpacity>
               </View>
-              <Text style={styles.label}>Latas de comida húmeda (opcional)</Text>
-              <TextInput
-                style={[styles.input, touched.wet_food_cans && errors.wet_food_cans ? styles.inputError : null]}
-                placeholder="0"
-                keyboardType="number-pad"
-                value={values.wet_food_cans}
-                onChangeText={handleChange('wet_food_cans')}
-              />
-              {touched.wet_food_cans && errors.wet_food_cans && <Text style={styles.error}>{String(errors.wet_food_cans)}</Text>}
-              <Text style={styles.label}>Notas (opcional)</Text>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Observaciones, estado de los gatos, incidencias..."
-                multiline
-                numberOfLines={4}
-                value={values.notes}
-                onChangeText={handleChange('notes')}
-              />
-              {touched.notes && errors.notes && <Text style={styles.error}>{String(errors.notes)}</Text>}
-              <TouchableOpacity
-                style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
-                onPress={() => submit()}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <ActivityIndicator color="#FFF" /> : <Text style={styles.submitBtnText}>Guardar visita</Text>}
+              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Latas (opt)</Text>
+              <TextInput className={`bg-white rounded-lg border-2 px-3 py-3 mb-2 text-base text-[#1A1A2E]${touched.wet_food_cans && errors.wet_food_cans ? ' border-red-600' : ' border-gray-300'}`} placeholder="0" keyboardType="number-pad" value={values.wet_food_cans} onChangeText={handleChange('wet_food_cans')} />
+              {touched.wet_food_cans && errors.wet_food_cans && <Text className="text-red-600 text-sm mb-2">{String(errors.wet_food_cans)}</Text>}
+              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Notas (opt)</Text>
+              <TextInput className="bg-white rounded-lg border-2 border-gray-300 px-3 py-3 mb-2 text-base text-[#1A1A2E] h-24" placeholder="Observaciones..." multiline numberOfLines={4} value={values.notes} onChangeText={handleChange('notes')} />
+              {touched.notes && errors.notes && <Text className="text-red-600 text-sm mb-2">{String(errors.notes)}</Text>}
+              <TouchableOpacity className={`bg-[#E85D04] rounded-xl py-4 items-center my-6${isSubmitting ? ' opacity-60' : ''}`} onPress={() => submit()} disabled={isSubmitting}>
+                {isSubmitting ? <ActivityIndicator color="#FFF" /> : <Text className="text-white text-base font-bold">Guardar visita</Text>}
               </TouchableOpacity>
             </ScrollView>
           </KeyboardAvoidingView>
@@ -122,24 +100,3 @@ export default function NewVisitScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F9FA' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12 },
-  backBtn: { fontSize: 16, color: '#E85D04', fontWeight: '700' },
-  title: { fontSize: 18, fontWeight: '800', color: '#1A1A2E' },
-  content: { flex: 1, paddingHorizontal: 16 },
-  label: { fontSize: 14, fontWeight: '700', color: '#1A1A2E', marginBottom: 8, marginTop: 4 },
-  input: { backgroundColor: '#FFF', borderRadius: 8, borderWidth: 1, borderColor: '#E0E0E0', paddingHorizontal: 12, paddingVertical: 10, marginBottom: 8, fontSize: 14 },
-  inputError: { borderColor: '#D32F2F' },
-  textArea: { height: 100, textAlignVertical: 'top', paddingTop: 12 },
-  error: { color: '#D32F2F', fontSize: 12, marginBottom: 8 },
-  toggleRow: { flexDirection: 'row', gap: 12, marginBottom: 16 },
-  toggleBtn: { flex: 1, borderRadius: 8, borderWidth: 1, borderColor: '#E0E0E0', paddingVertical: 10, alignItems: 'center', backgroundColor: '#FFF' },
-  toggleActive: { backgroundColor: '#E85D04', borderColor: '#E85D04' },
-  toggleText: { fontSize: 14, fontWeight: '600', color: '#666' },
-  toggleTextActive: { color: '#FFF' },
-  submitBtn: { backgroundColor: '#E85D04', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginVertical: 24 },
-  submitBtnDisabled: { opacity: 0.6 },
-  submitBtnText: { color: '#FFF', fontSize: 15, fontWeight: '700' },
-});
