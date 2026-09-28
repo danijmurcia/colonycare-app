@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
@@ -17,6 +17,12 @@ export default function DetalleColoniaScreen() {
   useEffect(() => {
     loadColonyData();
   }, [colonyId]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadColonyData();
+    }, [colonyId])
+  );
 
   const loadColonyData = async () => {
     try {
