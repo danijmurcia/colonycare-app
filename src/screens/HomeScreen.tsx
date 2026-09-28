@@ -98,25 +98,23 @@ export default function HomeScreen() {
         }
       >
         {/* HEADER MEJORADO */}
-        <View className="bg-orange-50 px-6 py-4">
+        <View className="bg-orange-50 px-6 py-4 flex-row justify-between items-start">
           <View>
-            <View>
-              <Text className="text-2xl font-bold text-orange-600 mb-1">🐱 ColonyCare</Text>
-              <Text className="text-sm text-gray-600 mb-3">
-                Sistema de gestión felina
-              </Text>
-              <Text className="text-xs text-gray-500">
-                {new Date().toLocaleDateString("es-ES", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                })}
-              </Text>
-            </View>
-            <TouchableOpacity className="bg-orange-600 rounded-lg px-3 py-1.5 items-center justify-center" onPress={logout}>
-              <Text className="text-white text-xs font-bold">🚪 Cerrar</Text>
-            </TouchableOpacity>
+            <Text className="text-2xl font-bold text-orange-600 mb-1">🐱 ColonyCare</Text>
+            <Text className="text-sm text-gray-600 mb-3">
+              Sistema de gestión felina
+            </Text>
+            <Text className="text-xs text-gray-500">
+              {new Date().toLocaleDateString("es-ES", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              })}
+            </Text>
           </View>
+          <TouchableOpacity className="bg-orange-600 rounded-lg px-3 py-1.5 items-center justify-center" onPress={logout}>
+            <Text className="text-white text-xs font-bold">🚪 Cerrar</Text>
+          </TouchableOpacity>
         </View>
 
         {/* STATS PRINCIPALES */}
