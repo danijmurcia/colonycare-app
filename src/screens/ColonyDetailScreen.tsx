@@ -78,7 +78,31 @@ export default function ColonyDetailScreen() {
           {visits.length === 0 ? (
             <Text style={styles.noVisits}>Sin visitas registradas</Text>
           ) : (
-            <FlatList data={visits} renderItem={({ item }) => <TouchableOpacity style={styles.visitItem} onPress={() => navigation.navigate('visit-detail', { visit: item })}><Text style={styles.visitDate}>{new Date(item.date).toLocaleDateString('es-ES')}</Text><Text style={styles.visitDetail}>{item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}</Text></TouchableOpacity>} keyExtractor={(item, i) => String(i)} scrollEnabled={false} />
+            <FlatList
+              data={visits}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.visitItem}
+                  onPress={() => navigation.navigate('visit-detail', { visit: item })}
+                >
+                  <View style={styles.visitRow}>
+                    <View style={styles.visitLeft}>
+                      <Text style={styles.visitDate}>
+                        {new Date(item.date).toLocaleDateString('es-ES')}
+                      </Text>
+                      <Text style={styles.visitDetail}>
+                        {item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}
+                      </Text>
+                    </View>
+                    <Text style={styles.visitUser}>
+                      {item.user?.first_name} {item.user?.last_name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item, i) => String(i)}
+              scrollEnabled={false}
+            />
           )}
         </View>
       </ScrollView>
@@ -100,8 +124,11 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 15, fontWeight: '700', color: '#1A1A2E', marginBottom: 12 },
   noVisits: { fontSize: 13, color: '#999', fontStyle: 'italic' },
   visitItem: { backgroundColor: '#FFF', borderRadius: 8, padding: 12, marginBottom: 8 },
+  visitRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  visitLeft: { flex: 1 },
   visitDate: { fontSize: 13, fontWeight: '700', color: '#E85D04' },
   visitDetail: { fontSize: 12, color: '#666', marginTop: 4 },
+  visitUser: { fontSize: 12, fontWeight: '600', color: '#999', textAlign: 'right', maxWidth: '40%' },
   buttonsRow: { flexDirection: 'row', gap: 12, marginBottom: 30 },
   editBtn: { flex: 1, backgroundColor: '#FF9500', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
   editBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700' },
