@@ -26,6 +26,16 @@ export interface RegisterResponse {
   is_active: boolean;
 }
 
+export interface UserProfile {
+  id: number;
+  email: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+}
+
 export const authService = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
     const response = await httpManager.post<LoginResponse>('/auth/login', { email, password });
@@ -35,5 +45,10 @@ export const authService = {
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
     const response = await httpManager.post<RegisterResponse>('/auth/register', data);
     return response.data;
+  },
+
+  me: async (): Promise<UserProfile> => {
+    const response = await httpManager.get<{ data: UserProfile }>('/auth/me');
+    return response.data.data;
   },
 };

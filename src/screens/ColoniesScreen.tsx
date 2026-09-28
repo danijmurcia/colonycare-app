@@ -8,17 +8,19 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ColoniesStackParamList } from "../navigation/types";
 import { coloniesService, Colony } from "../services/coloniesService";
+import { useToast } from "react-native-toast-notifications";
+import { usePermissions } from "../hooks/usePermissions";
 
 const SWIPE_THRESHOLD = 60;
 const DELETE_BTN_WIDTH = 80;
 
-function SwipeableColonyCard({ item, onPress, onDelete }: {
-  item: Colony; onPress: () => void; onDelete: () => void;
+function SwipeableColonyCard({ item, onPress, onDelete, canDelete }: {
+  item: Colony; onPress: () => void; onDelete: () => void; canDelete: boolean;
 }) {
   const translateX = useRef(new Animated.Value(0)).current;
   const isOpen = useRef(false);
   const panResponder = useRef(PanResponder.create({
-    onMoveShouldSetPanResponder: (_, gs) => Math.abs(gs.dx) > 5 && Math.abs(gs.dy) < 20,
+    onMoveShouldSetPanResponder: (_, gs) => canDelete && Math.abs(gs.dx) > 5 && Math.abs(gs.dy) < 20,
     onPanResponderMove: (_, gs) => {
       const val = isOpen.current ? gs.dx - DELETE_BTN_WIDTH : gs.dx;
       if (val <= 0) translateX.setValue(Math.max(val, -DELETE_BTN_WIDTH));
@@ -37,11 +39,13 @@ function SwipeableColonyCard({ item, onPress, onDelete }: {
 
   return (
     <View style={styles.swipeContainer}>
-      <View style={styles.deleteAction}>
-        <TouchableOpacity style={styles.deleteBtn} onPress={onDelete}>
-          <Text style={styles.deleteBtnText}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+      {canDelete && (
+        <View style={styles.deleteAction}>
+          <TouchableOpacity style={styles.deleteBtn} onPress={onDelete}>
+            <Text style={styles.deleteBtnText}>Eliminar</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <Animated.View style={{ transform: [{ translateX }] }} {...panResponder.panHandlers}>
         <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
           <Text style={styles.cardTitle}>{item.name}</Text>
@@ -58,6 +62,8 @@ export default function ColoniesScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
+  const toast = useToast();
+  const { canDeleteColony } = usePermissions();
 
   const loadColonies = useCallback(async () => {
     try {
@@ -86,14 +92,16 @@ export default function ColoniesScreen() {
       { text: "Cancelar", style: "cancel" },
       { text: "Eliminar", style: "destructive", onPress: async () => {
         try {
-          await coloniesService.delete(id);
+          const message = await coloniesService.delete(id);
           setColonies((prev) => prev.filter((c) => c.id !== id));
-        } catch {
-          Alert.alert("Error", "No se pudo eliminar la colonia");
+          toast.show(message || "Colonia eliminada correctamente", { type: "success", duration: 2000 });
+        } catch (error: any) {
+          const msg = error?.response?.data?.message || "No se pudo eliminar la colonia";
+          toast.show(msg, { type: "danger", duration: 2000 });
         }
       }},
     ]);
-  }, []);
+  }, [toast]);
 
   useEffect(() => { loadColonies(); }, [loadColonies]);
   useFocusEffect(React.useCallback(() => { loadColonies(); }, [loadColonies]));
@@ -119,6 +127,7 @@ export default function ColoniesScreen() {
             <SwipeableColonyCard item={item}
               onPress={() => navigation.navigate("colony-detail", { colonyId: item.id })}
               onDelete={() => handleDelete(item.id, item.name)}
+              canDelete={canDeleteColony}
             />
           )}
         />

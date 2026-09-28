@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { setAuthToken, setOnUnauthorized } from '../services/HttpManager';
+import { authService, UserProfile } from '../services/authService';
 
 const storage = {
   getItem: (key: string): Promise<string | null> => {
@@ -22,6 +23,7 @@ const TOKEN_KEY = 'colonycare_token';
 
 interface AuthContextType {
   token: string | null;
+  user: UserProfile | null;
   isLoading: boolean;
   login: (token: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -31,19 +33,31 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const profile = await authService.me();
+      setUser(profile);
+    } catch {
+      setUser(null);
+    }
+  };
 
   useEffect(() => {
     setOnUnauthorized(() => {
       storage.deleteItem(TOKEN_KEY);
       setAuthToken(null);
       setToken(null);
+      setUser(null);
     });
     storage.getItem(TOKEN_KEY)
-      .then((savedToken) => {
+      .then(async (savedToken) => {
         if (savedToken) {
           setToken(savedToken);
           setAuthToken(savedToken);
+          await fetchUser();
         }
       })
       .finally(() => setIsLoading(false));
@@ -53,16 +67,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await storage.setItem(TOKEN_KEY, newToken);
     setAuthToken(newToken);
     setToken(newToken);
+    await fetchUser();
   };
 
   const logout = async () => {
     await storage.deleteItem(TOKEN_KEY);
     setAuthToken(null);
     setToken(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ token, user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
