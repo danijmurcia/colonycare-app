@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { useToast } from 'react-native-toast-notifications';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { coloniesService } from '../services/coloniesService';
@@ -16,21 +17,29 @@ const validationSchema = Yup.object().shape({
 export default function NuevaVisitaScreen() {
   const route = useRoute() as any;
   const navigation = useNavigation();
+  const toast = useToast();
   const { colonyId } = route.params || {};
   const [canSize, setCanSize] = useState<'small' | 'large' | null>(null);
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
-      await coloniesService.createVisit(colonyId, {
+      const response = await coloniesService.createVisit(colonyId, {
         cats_seen: Number(values.cats_seen),
         food_grams: Number(values.food_grams),
         wet_food_cans: values.wet_food_cans ? Number(values.wet_food_cans) : undefined,
         can_size: canSize || undefined,
         notes: values.notes || undefined,
       });
+      toast.show(response.message || 'Visita registrada correctamente', {
+        type: 'success',
+        duration: 2000,
+      });
       navigation.goBack();
-    } catch (error) {
-      console.error('Error registrando visita:', error);
+    } catch (error: any) {
+      toast.show(error.response?.data?.message || 'Error al registrar la visita', {
+        type: 'danger',
+        duration: 2000,
+      });
     } finally {
       setSubmitting(false);
     }

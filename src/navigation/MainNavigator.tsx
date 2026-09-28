@@ -69,17 +69,13 @@ export default function MainNavigator() {
         name="colonies"
         component={ColoniesStackNavigator}
         listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            // Si el stack tiene más de 1 screen, resetea al listado
+          tabPress: () => {
             setTimeout(() => {
-              const state = coloniesStackRef.current?.getRootState?.();
-              if (state?.routes?.length > 1) {
-                coloniesStackRef.current?.reset({
-                  index: 0,
-                  routes: [{ name: 'colonies-list' as any }],
-                });
-              }
-            }, 0);
+              coloniesStackRef.current?.reset({
+                index: 0,
+                routes: [{ name: 'colonies-list' as any }],
+              });
+            }, 100);
           },
         })}
         options={{
