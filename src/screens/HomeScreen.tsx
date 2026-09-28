@@ -133,8 +133,7 @@ export default function HomeScreen() {
         </View>
 
         {/* PENDIENTES CON TABS */}
-        {(dailyPending.length > 0 || overduePending.length > 0) && (
-          <View style={styles.section}>
+        <View style={styles.section}>
             <Text style={styles.sectionTitle}>📋 Visitas Pendientes</Text>
             {/* Tabs */}
             <View style={styles.tabsRow}>
@@ -178,13 +177,19 @@ export default function HomeScreen() {
                 <Text style={styles.pendingArrow}>›</Text>
               </TouchableOpacity>
             ))}
-            {(pendingTab === 'daily' ? dailyPending : overduePending).length === 0 && (
+            {(pendingTab === 'daily' ? dailyPending : overduePending).length === 0 && !loadingDaily && !loadingOverdue && (
               <View style={styles.emptyTab}>
-                <Text style={styles.emptyTabText}>✅ Sin pendientes en esta categoría</Text>
+                <Text style={styles.emptyTabIcon}>
+                  {pendingTab === 'daily' ? '🎉' : '✅'}
+                </Text>
+                <Text style={styles.emptyTabText}>
+                  {pendingTab === 'daily'
+                    ? 'Todas las colonias han sido visitadas hoy'
+                    : 'No hay colonias sin visitar en 2+ días'}
+                </Text>
               </View>
             )}
           </View>
-        )}
 
         {/* MI RESUMEN - CARD COMPLETO */}
         {stats && (
@@ -291,6 +296,7 @@ const styles = StyleSheet.create({
   tabBadge: { fontSize: 12, fontWeight: "800", color: "inherit" },
   pendingCardOverdue: { borderLeftColor: "#FF3B30" },
   pendingIconBoxOverdue: { backgroundColor: "#FFE0E0" },
-  emptyTab: { paddingVertical: 20, alignItems: "center" },
-  emptyTabText: { fontSize: 14, color: "#AAA", fontWeight: "600" },
+  emptyTab: { paddingVertical: 24, alignItems: "center", gap: 8 },
+  emptyTabIcon: { fontSize: 32 },
+  emptyTabText: { fontSize: 14, color: "#AAA", fontWeight: "600", textAlign: "center" },
 });
