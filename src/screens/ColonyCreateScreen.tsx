@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -35,16 +35,16 @@ export default function ColonyCreateScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.topHeader}>
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <View className="px-4 py-3">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtn}>← Volver</Text>
+          <Text className="text-base text-[#E85D04] font-bold">← Volver</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.header}>
-          <Text style={styles.title}>🐱 Nueva Colonia</Text>
-          <Text style={styles.subtitle}>Registra una nueva colonia de gatos</Text>
+      <ScrollView className="flex-1 px-4">
+        <View className="my-6">
+          <Text className="text-3xl font-black text-[#1A1A2E]">🐱 Nueva Colonia</Text>
+          <Text className="text-base text-gray-400 mt-1">Registra una nueva colonia de gatos</Text>
         </View>
         <Formik
           initialValues={{ name: '', location: '', estimated_cats: '' }}
@@ -52,24 +52,24 @@ export default function ColonyCreateScreen() {
           onSubmit={(v) => handleSubmit({ name: v.name, location: v.location, estimated_cats: parseInt(v.estimated_cats) })}
         >
           {({ handleChange, handleBlur, handleSubmit: formikSubmit, values, errors, touched }) => (
-            <View style={styles.form}>
-              <View style={styles.fieldGroup}>
-                <Text style={styles.label}>Nombre *</Text>
-                <TextInput style={[styles.input, touched.name && errors.name && styles.inputError]} placeholder="Ej: Colonia Centro" placeholderTextColor="#999" onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} editable={!loading} />
-                {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+            <View className="mb-8">
+              <View className="mb-6">
+                <Text className="text-base font-semibold text-[#1A1A2E] mb-2">Nombre *</Text>
+                <TextInput className={`bg-white rounded-lg border border-gray-300 px-4 py-3 text-base text-[#1A1A2E]${touched.name && errors.name ? ' border-red-500' : ''}`} placeholder="Ej: Colonia Centro" placeholderTextColor="#999" onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} editable={!loading} />
+                {touched.name && errors.name && <Text className="text-sm text-red-500 mt-1">{errors.name}</Text>}
               </View>
-              <View style={styles.fieldGroup}>
-                <Text style={styles.label}>Ubicación *</Text>
-                <TextInput style={[styles.input, touched.location && errors.location && styles.inputError]} placeholder="Ej: Calle Principal 123" placeholderTextColor="#999" onChangeText={handleChange('location')} onBlur={handleBlur('location')} value={values.location} editable={!loading} />
-                {touched.location && errors.location && <Text style={styles.errorText}>{errors.location}</Text>}
+              <View className="mb-6">
+                <Text className="text-base font-semibold text-[#1A1A2E] mb-2">Ubicación *</Text>
+                <TextInput className={`bg-white rounded-lg border border-gray-300 px-4 py-3 text-base text-[#1A1A2E]${touched.location && errors.location ? ' border-red-500' : ''}`} placeholder="Ej: Calle Principal 123" placeholderTextColor="#999" onChangeText={handleChange('location')} onBlur={handleBlur('location')} value={values.location} editable={!loading} />
+                {touched.location && errors.location && <Text className="text-sm text-red-500 mt-1">{errors.location}</Text>}
               </View>
-              <View style={styles.fieldGroup}>
-                <Text style={styles.label}>Número aproximado de gatos *</Text>
-                <TextInput style={[styles.input, touched.estimated_cats && errors.estimated_cats && styles.inputError]} placeholder="Ej: 5" placeholderTextColor="#999" keyboardType="number-pad" onChangeText={handleChange('estimated_cats')} onBlur={handleBlur('estimated_cats')} value={values.estimated_cats} editable={!loading} />
-                {touched.estimated_cats && errors.estimated_cats && <Text style={styles.errorText}>{errors.estimated_cats}</Text>}
+              <View className="mb-6">
+                <Text className="text-base font-semibold text-[#1A1A2E] mb-2">Número aproximado de gatos *</Text>
+                <TextInput className={`bg-white rounded-lg border border-gray-300 px-4 py-3 text-base text-[#1A1A2E]${touched.estimated_cats && errors.estimated_cats ? ' border-red-500' : ''}`} placeholder="Ej: 5" placeholderTextColor="#999" keyboardType="number-pad" onChangeText={handleChange('estimated_cats')} onBlur={handleBlur('estimated_cats')} value={values.estimated_cats} editable={!loading} />
+                {touched.estimated_cats && errors.estimated_cats && <Text className="text-sm text-red-500 mt-1">{errors.estimated_cats}</Text>}
               </View>
-              <TouchableOpacity style={[styles.submitBtn, loading && styles.submitBtnDisabled]} onPress={() => formikSubmit()} disabled={loading}>
-                {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.submitBtnText}>Crear colonia</Text>}
+              <TouchableOpacity className={`bg-[#E85D04] rounded-lg py-4 items-center${loading ? ' opacity-60' : ''}`} onPress={() => formikSubmit()} disabled={loading}>
+                {loading ? <ActivityIndicator color="#FFF" /> : <Text className="text-white text-base font-semibold">Crear colonia</Text>}
               </TouchableOpacity>
             </View>
           )}
@@ -78,22 +78,3 @@ export default function ColonyCreateScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F9FA' },
-  topHeader: { paddingHorizontal: 16, paddingVertical: 12 },
-  backBtn: { fontSize: 16, color: '#E85D04', fontWeight: '700' },
-  scrollView: { flex: 1, paddingHorizontal: 16 },
-  header: { marginVertical: 20 },
-  title: { fontSize: 26, fontWeight: '800', color: '#1A1A2E' },
-  subtitle: { fontSize: 13, color: '#999', marginTop: 4 },
-  form: { marginBottom: 30 },
-  fieldGroup: { marginBottom: 18 },
-  label: { fontSize: 14, fontWeight: '600', color: '#1A1A2E', marginBottom: 8 },
-  input: { backgroundColor: '#FFF', borderRadius: 8, borderWidth: 1, borderColor: '#E0E0E0', paddingHorizontal: 14, paddingVertical: 12, fontSize: 14, color: '#1A1A2E' },
-  inputError: { borderColor: '#D32F2F' },
-  errorText: { fontSize: 12, color: '#D32F2F', marginTop: 4 },
-  submitBtn: { backgroundColor: '#E85D04', borderRadius: 8, paddingVertical: 14, alignItems: 'center', marginTop: 10 },
-  submitBtnDisabled: { opacity: 0.6 },
-  submitBtnText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
-});
