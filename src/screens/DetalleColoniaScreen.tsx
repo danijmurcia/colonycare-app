@@ -65,6 +65,9 @@ export default function DetalleColoniaScreen() {
           <Text style={styles.label}>🐱 Gatos estimados</Text>
           <Text style={styles.value}>{colony.estimated_cats || 0}</Text>
         </View>
+        <TouchableOpacity style={styles.visitBtn} onPress={() => navigation.navigate('visit-new', { colonyId })}>
+          <Text style={styles.visitBtnText}>+ Registrar Visita</Text>
+        </TouchableOpacity>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📋 Historial de Visitas ({visits.length})</Text>
           {visits.length === 0 ? (
@@ -73,9 +76,6 @@ export default function DetalleColoniaScreen() {
             <FlatList data={visits} renderItem={({ item }) => <TouchableOpacity style={styles.visitItem} onPress={() => navigation.navigate('visit-detail', { visit: item })}><Text style={styles.visitDate}>{new Date(item.date).toLocaleDateString('es-ES')}</Text><Text style={styles.visitDetail}>{item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}</Text></TouchableOpacity>} keyExtractor={(item, i) => String(i)} scrollEnabled={false} />
           )}
         </View>
-        <TouchableOpacity style={styles.visitBtn} onPress={() => navigation.navigate('visit-new', { colonyId })}>
-          <Text style={styles.visitBtnText}>+ Registrar Visita</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
