@@ -57,44 +57,44 @@ export default function ColonyDetailScreen() {
         <View />
       </View>
       <ScrollView className="flex-1 px-4 py-3">
-        <View className="bg-white rounded-xl p-4 mb-3">
-          <Text className="text-sm text-gray-400 font-semibold mb-1">📍 Localizacion</Text>
-          <Text className="text-base font-bold text-[#1A1A2E]">{colony.location}</Text>
+        <View className="bg-white rounded-xl p-5 mb-4">
+          <Text className="text-base text-gray-400 font-semibold mb-2">📍 Localizacion</Text>
+          <Text className="text-lg font-bold text-[#1A1A2E]">{colony.location}</Text>
         </View>
-        <View className="bg-white rounded-xl p-4 mb-3">
-          <Text className="text-sm text-gray-400 font-semibold mb-1">🐱 Gatos estimados</Text>
-          <Text className="text-base font-bold text-[#1A1A2E]">{colony.estimated_cats || 0}</Text>
+        <View className="bg-white rounded-xl p-5 mb-4">
+          <Text className="text-base text-gray-400 font-semibold mb-2">🐱 Gatos estimados</Text>
+          <Text className="text-lg font-bold text-[#1A1A2E]">{colony.estimated_cats || 0}</Text>
         </View>
-        <View className="flex-row gap-3 mb-8">
-          <TouchableOpacity className="flex-1 bg-orange-400 rounded-xl py-3 items-center" onPress={() => navigation.navigate('colony-edit', { colonyId })}>
-            <Text className="text-white text-sm font-bold">✎ Editar colonia</Text>
+        <View className="flex-row gap-4 mb-8">
+          <TouchableOpacity className="flex-1 bg-orange-400 rounded-xl py-4 items-center" onPress={() => navigation.navigate('colony-edit', { colonyId })}>
+            <Text className="text-white text-base font-bold">✎ Editar colonia</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 bg-[#E85D04] rounded-xl py-3 items-center" onPress={() => navigation.navigate('visit-new', { colonyId })}>
-            <Text className="text-white text-sm font-bold">+ Registrar visita</Text>
+          <TouchableOpacity className="flex-1 bg-[#E85D04] rounded-xl py-4 items-center" onPress={() => navigation.navigate('visit-new', { colonyId })}>
+            <Text className="text-white text-base font-bold">+ Registrar visita</Text>
           </TouchableOpacity>
         </View>
         <View className="mb-5">
-          <Text className="text-base font-bold text-[#1A1A2E] mb-3">📋 Historial de visitas ({visits.length})</Text>
+          <Text className="text-lg font-bold text-[#1A1A2E] mb-4">📋 Historial de visitas ({visits.length})</Text>
           {visits.length === 0 ? (
-            <Text className="text-sm text-gray-400 italic">Sin visitas registradas</Text>
+            <Text className="text-base text-gray-400 italic">Sin visitas registradas</Text>
           ) : (
             <FlatList
               data={visits}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  className="bg-white rounded-lg p-3 mb-2"
+                  className="bg-white rounded-lg p-4 mb-3"
                   onPress={() => navigation.navigate('visit-detail', { visit: item })}
                 >
                   <View className="flex-row justify-between items-start">
                     <View className="flex-1">
-                      <Text className="text-sm font-bold text-[#E85D04]">
+                      <Text className="text-base font-bold text-[#E85D04]">
                         {new Date(item.date).toLocaleDateString('es-ES')}
                       </Text>
-                      <Text className="text-xs text-gray-500 mt-1">
+                      <Text className="text-sm text-gray-500 mt-1">
                         {item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}
                       </Text>
                     </View>
-                    <Text className="text-xs font-semibold text-gray-400 text-right w-2/5">
+                    <Text className="text-sm font-semibold text-gray-400 text-right w-2/5">
                       {item.user?.first_name} {item.user?.last_name}
                     </Text>
                   </View>
