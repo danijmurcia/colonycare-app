@@ -100,8 +100,10 @@ export default function HomeScreen() {
         {/* HEADER MEJORADO */}
         <View className="bg-orange-50 px-6 py-4 flex-row justify-between items-start">
           <View>
-            <Text className="text-2xl font-bold text-orange-600 mb-1">🐱 ColonyCare</Text>
-            <Text className="text-sm text-gray-600 mb-3">
+            <Text className="text-2xl font-bold text-orange-600 mb-1">
+              🐱 ColonyCare
+            </Text>
+            <Text className="text-sm text-gray-600">
               Sistema de gestión felina
             </Text>
             <Text className="text-xs text-gray-500">
@@ -112,40 +114,57 @@ export default function HomeScreen() {
               })}
             </Text>
           </View>
-          <TouchableOpacity className="bg-orange-600 rounded-lg px-3 py-1.5 items-center justify-center" onPress={logout}>
-            <Text className="text-white text-xs font-bold">🚪 Cerrar</Text>
+          <TouchableOpacity
+            className="bg-orange-600 rounded-lg px-3 py-1.5 items-center justify-center"
+            onPress={logout}
+          >
+            <Text className="text-white text-xs font-bold">
+              🚪 Cerrar sesión
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* STATS PRINCIPALES */}
-        <View className="flex-row gap-3 px-6 py-4">
+        <View className="flex-row gap-4 px-6 py-5">
           <TouchableOpacity
-            className="flex-1 bg-white rounded-xl p-4 items-center shadow"
+            className="flex-1 bg-white rounded-xl p-6 items-center shadow"
             onPress={() =>
               navigation.navigate("colonies", { screen: "colonies-list" })
             }
           >
             <Text className="text-2xl mb-1">🏘️</Text>
-            <Text className="text-xl font-black text-[#1A1A2E]">{colonies.length}</Text>
-            <Text className="text-xs text-gray-500 font-semibold">Colonias</Text>
+            <Text className="text-xl font-black text-[#1A1A2E]">
+              {colonies.length}
+            </Text>
+            <Text className="text-xs text-gray-500 font-semibold">
+              Colonias
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 bg-white rounded-xl p-4 items-center shadow">
             <Text className="text-2xl mb-1">🐱</Text>
-            <Text className="text-xl font-black text-[#1A1A2E]">{totalGatos}</Text>
-            <Text className="text-xs text-gray-500 font-semibold">Gatos Totales</Text>
+            <Text className="text-xl font-black text-[#1A1A2E]">
+              {totalGatos}
+            </Text>
+            <Text className="text-xs text-gray-500 font-semibold">
+              Gatos Totales
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 bg-white rounded-xl p-4 items-center shadow">
             <Text className="text-2xl mb-1">⚠️</Text>
             <Text className="text-xl font-black text-[#1A1A2E]">
               {dailyPending.length + overduePending.length}
             </Text>
-            <Text className="text-xs text-gray-500 font-semibold">Pendientes</Text>
+            <Text className="text-xs text-gray-500 font-semibold">
+              Pendientes
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* PENDIENTES CON TABS */}
         <View className="bg-white rounded-xl mx-6 mb-6 p-4 shadow">
-          <Text className="text-base font-black text-[#1A1A2E] mb-3">📋 Visitas Pendientes</Text>
+          <Text className="text-base font-black text-[#1A1A2E] mb-3">
+            📋 Visitas Pendientes
+          </Text>
           {/* Tabs */}
           <View className="flex-row gap-2 mb-3">
             <TouchableOpacity
@@ -154,9 +173,11 @@ export default function HomeScreen() {
               }`}
               onPress={() => handleTabChange("daily")}
             >
-              <Text className={`text-sm font-bold ${
-                pendingTab === "daily" ? "text-white" : "text-gray-500"
-              }`}>
+              <Text
+                className={`text-sm font-bold ${
+                  pendingTab === "daily" ? "text-white" : "text-gray-500"
+                }`}
+              >
                 📅 Hoy {dailyPending.length > 0 && `(${dailyPending.length})`}
               </Text>
             </TouchableOpacity>
@@ -167,10 +188,13 @@ export default function HomeScreen() {
               onPress={() => handleTabChange("overdue")}
               disabled={loadingOverdue}
             >
-              <Text className={`text-sm font-bold ${
-                pendingTab === "overdue" ? "text-white" : "text-gray-500"
-              }`}>
-                {loadingOverdue ? "⏳" : "⚠️"} 2+ días {overduePending.length > 0 && `(${overduePending.length})`}
+              <Text
+                className={`text-sm font-bold ${
+                  pendingTab === "overdue" ? "text-white" : "text-gray-500"
+                }`}
+              >
+                {loadingOverdue ? "⏳" : "⚠️"} 2+ días{" "}
+                {overduePending.length > 0 && `(${overduePending.length})`}
               </Text>
             </TouchableOpacity>
           </View>
@@ -181,7 +205,9 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={c.id}
                 className={`flex-row items-center bg-white rounded-xl p-3 mb-2 border-l-4 ${
-                  pendingTab === "overdue" ? "border-red-500" : "border-orange-500"
+                  pendingTab === "overdue"
+                    ? "border-red-500"
+                    : "border-orange-500"
                 }`}
                 onPress={() =>
                   navigation.navigate("colonies", {
@@ -198,7 +224,9 @@ export default function HomeScreen() {
                   {pendingTab === "overdue" ? "🔴" : "📌"}
                 </Text>
                 <View className="flex-1">
-                  <Text className="text-sm font-bold text-[#1A1A2E]">{c.name}</Text>
+                  <Text className="text-sm font-bold text-[#1A1A2E]">
+                    {c.name}
+                  </Text>
                   <Text className="text-xs text-gray-500">
                     📍 {c.location} • 🐱 {c.estimated_cats} gatos
                   </Text>
@@ -227,7 +255,9 @@ export default function HomeScreen() {
         {stats && (
           <View className="bg-white rounded-lg p-4 shadow m-6">
             <View className="flex-row justify-between items-center">
-              <Text className="text-base font-black text-[#1A1A2E]">📊 Mi Resumen</Text>
+              <Text className="text-base font-black text-[#1A1A2E]">
+                📊 Mi Resumen
+              </Text>
               <TouchableOpacity
                 onPress={() => setShowStatsInfo(true)}
                 className="w-8 h-8 rounded-full bg-orange-100 items-center justify-center"
@@ -238,20 +268,32 @@ export default function HomeScreen() {
             {/* Fila superior: 3 números */}
             <View className="flex-row justify-around py-4">
               <View className="flex-1 items-center">
-                <Text className="text-2xl font-black text-[#E85D04]">{stats.total_visits || 0}</Text>
-                <Text className="text-xs text-gray-500 font-semibold mt-1">Visitas</Text>
-              </View>
-              <View className="w-px bg-gray-100" />
-              <View className="flex-1 items-center">
-                <Text className="text-2xl font-black text-[#E85D04]">{stats.total_colonies || 0}</Text>
-                <Text className="text-xs text-gray-500 font-semibold mt-1">Colonias</Text>
+                <Text className="text-2xl font-black text-[#E85D04]">
+                  {stats.total_visits || 0}
+                </Text>
+                <Text className="text-xs text-gray-500 font-semibold mt-1">
+                  Visitas
+                </Text>
               </View>
               <View className="w-px bg-gray-100" />
               <View className="flex-1 items-center">
                 <Text className="text-2xl font-black text-[#E85D04]">
-                  {stats.total_colonies ? Math.round(stats.total_visits / stats.total_colonies) : 0}
+                  {stats.total_colonies || 0}
                 </Text>
-                <Text className="text-xs text-gray-500 font-semibold mt-1">Promedio de visitas</Text>
+                <Text className="text-xs text-gray-500 font-semibold mt-1">
+                  Colonias
+                </Text>
+              </View>
+              <View className="w-px bg-gray-100" />
+              <View className="flex-1 items-center">
+                <Text className="text-2xl font-black text-[#E85D04]">
+                  {stats.total_colonies
+                    ? Math.round(stats.total_visits / stats.total_colonies)
+                    : 0}
+                </Text>
+                <Text className="text-xs text-gray-500 font-semibold mt-1">
+                  Promedio de visitas
+                </Text>
               </View>
             </View>
 
@@ -261,10 +303,16 @@ export default function HomeScreen() {
             {/* Colonia más visitada */}
             {stats.most_visited && (
               <View className="flex-row items-center gap-3 mb-3">
-                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">🏆</Text>
+                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">
+                  🏆
+                </Text>
                 <View className="flex-1">
-                  <Text className="text-xs font-semibold text-gray-400 mb-0.5">Colonia más visitada</Text>
-                  <Text className="text-sm font-bold text-[#1A1A2E]">{stats.most_visited.name}</Text>
+                  <Text className="text-xs font-semibold text-gray-400 mb-0.5">
+                    Colonia más visitada
+                  </Text>
+                  <Text className="text-sm font-bold text-[#1A1A2E]">
+                    {stats.most_visited.name}
+                  </Text>
                 </View>
                 <Text className="bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">
                   {stats.most_visited.count} visitas
@@ -275,7 +323,9 @@ export default function HomeScreen() {
             {/* Última visita */}
             {stats.last_visit && (
               <View className="flex-row items-center gap-3">
-                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">🕒</Text>
+                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">
+                  🕒
+                </Text>
                 <View className="flex-1">
                   <Text className="text-xs font-semibold text-gray-400 mb-0.5">
                     Fecha última visita
@@ -304,40 +354,62 @@ export default function HomeScreen() {
           onPress={() => setShowStatsInfo(false)}
         >
           <View className="bg-white rounded-xl p-5 mx-5 shadow-lg">
-            <TouchableOpacity onPress={() => setShowStatsInfo(false)} className="self-end p-2">
+            <TouchableOpacity
+              onPress={() => setShowStatsInfo(false)}
+              className="self-end p-2"
+            >
               <Text className="text-xl text-gray-500">✕</Text>
             </TouchableOpacity>
-            <Text className="text-lg font-semibold text-gray-800 mb-4">📊 ¿Qué significan estos datos?</Text>
+            <Text className="text-lg font-semibold text-gray-800 mb-4">
+              📊 ¿Qué significan estos datos?
+            </Text>
 
             <View className="flex-row mb-3">
               <Text className="text-2xl mr-3">📋</Text>
               <View className="flex-1">
-                <Text className="text-sm font-semibold text-gray-800 mb-1">Visitas</Text>
-                <Text className="text-xs text-gray-500 leading-5">Total de visitas que has registrado en todas las colonias (compartidas entre todos los usuarios)</Text>
+                <Text className="text-sm font-semibold text-gray-800 mb-1">
+                  Visitas
+                </Text>
+                <Text className="text-xs text-gray-500 leading-5">
+                  Total de visitas que has registrado en todas las colonias
+                  (compartidas entre todos los usuarios)
+                </Text>
               </View>
             </View>
 
             <View className="flex-row mb-3">
               <Text className="text-2xl mr-3">🏘️</Text>
               <View className="flex-1">
-                <Text className="text-sm font-semibold text-gray-800 mb-1">Colonias</Text>
-                <Text className="text-xs text-gray-500 leading-5">Número de colonias diferentes que has visitado. Las colonias son compartidas entre todos los usuarios</Text>
+                <Text className="text-sm font-semibold text-gray-800 mb-1">
+                  Colonias
+                </Text>
+                <Text className="text-xs text-gray-500 leading-5">
+                  Número de colonias diferentes que has visitado. Las colonias
+                  son compartidas entre todos los usuarios
+                </Text>
               </View>
             </View>
 
             <View className="flex-row mb-3">
               <Text className="text-2xl mr-3">📈</Text>
               <View className="flex-1">
-                <Text className="text-sm font-semibold text-gray-800 mb-1">Prom. visitas</Text>
-                <Text className="text-xs text-gray-500 leading-5">Promedio de visitas por colonia. Se calcula: Total visitas ÷ Colonias diferentes</Text>
+                <Text className="text-sm font-semibold text-gray-800 mb-1">
+                  Prom. visitas
+                </Text>
+                <Text className="text-xs text-gray-500 leading-5">
+                  Promedio de visitas por colonia. Se calcula: Total visitas ÷
+                  Colonias diferentes
+                </Text>
               </View>
             </View>
 
-            <Text className="text-xs text-gray-400 mt-4 italic">Tus datos son personales. Las colonias se comparten con otros usuarios</Text>
+            <Text className="text-xs text-gray-400 mt-4 italic">
+              Tus datos son personales. Las colonias se comparten con otros
+              usuarios
+            </Text>
           </View>
         </TouchableOpacity>
       )}
     </SafeAreaView>
   );
 }
-
