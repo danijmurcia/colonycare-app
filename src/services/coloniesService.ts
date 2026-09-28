@@ -67,7 +67,7 @@ export const coloniesService = {
     return response.data.data;
   },
 
-  createVisit: async (colonyId: number,  VisitRequest): Promise<Visit> => {
+  createVisit: async (colonyId: number, data: VisitRequest): Promise<Visit> => {
     const response = await httpManager.post<ApiResponse<Visit>>('/colonies/' + colonyId + '/visits', data);
     return response.data.data;
   },
