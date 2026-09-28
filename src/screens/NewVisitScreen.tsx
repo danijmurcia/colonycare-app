@@ -40,7 +40,7 @@ export default function NewVisitScreen() {
         cats_seen: Number(values.cats_seen),
         food_grams: foodGrams,
         wet_food_cans: values.wet_food_cans ? Number(values.wet_food_cans) : undefined,
-        can_size: canSize || undefined,
+        
         notes: values.notes || undefined,
       });
       toast.show(response.message || 'Visita registrada correctamente', { type: 'success', duration: 2000 });
@@ -98,15 +98,6 @@ export default function NewVisitScreen() {
                 onChangeText={handleChange('wet_food_cans')}
               />
               {touched.wet_food_cans && errors.wet_food_cans && <Text style={styles.error}>{String(errors.wet_food_cans)}</Text>}
-              <Text style={styles.label}>Tamaño de lata (opcional)</Text>
-              <View style={styles.toggleRow}>
-                <TouchableOpacity style={[styles.toggleBtn, canSize === 'small' && styles.toggleActive]} onPress={() => setCanSize(canSize === 'small' ? null : 'small')}>
-                  <Text style={[styles.toggleText, canSize === 'small' && styles.toggleTextActive]}>Pequeña</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.toggleBtn, canSize === 'large' && styles.toggleActive]} onPress={() => setCanSize(canSize === 'large' ? null : 'large')}>
-                  <Text style={[styles.toggleText, canSize === 'large' && styles.toggleTextActive]}>Grande</Text>
-                </TouchableOpacity>
-              </View>
               <Text style={styles.label}>Notas (opcional)</Text>
               <TextInput
                 style={[styles.input, styles.textArea]}
