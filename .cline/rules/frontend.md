@@ -6,9 +6,10 @@
 - Deep navigation mediante route params tipados en `types.ts`
 - Siempre incluir botón volver (goBack)
 - Usar `listeners` en Tab.Screen para resets del stack:
-  - **Patrón:** `setTimeout(() => reset(), 100)` en tabPress listener
-  - Permite que la navegación ocurra primero, luego resetea el stack
-  - Necesario para stacks anidados dentro de tabs
+  - **Patrón correcto:** `navigation.navigate()` con screen explícito
+  - `tabPress: (e) => { e.preventDefault(); navigation.navigate('tab', { screen: 'list' }); }`
+  - NUNCA usar setTimeout + reset() (race conditions)
+  - Sincrónico y confiable para stacks anidados
 
 ## 🎨 Componentes
 - Screens en `src/screens/`
