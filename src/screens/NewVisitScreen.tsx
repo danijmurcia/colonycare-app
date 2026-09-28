@@ -66,11 +66,11 @@ export default function NewVisitScreen() {
         {({ handleChange, handleSubmit: submit, values, errors, touched, isSubmitting }) => (
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
             <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
-              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Gatos vistos *</Text>
-              <TextInput className={`bg-white rounded-lg border-2 px-3 py-3 mb-2 text-base text-[#1A1A2E]${touched.cats_seen && errors.cats_seen ? ' border-red-600' : ' border-gray-300'}`} placeholder="0" keyboardType="number-pad" value={values.cats_seen} onChangeText={handleChange('cats_seen')} />
-              {touched.cats_seen && errors.cats_seen && <Text className="text-red-600 text-sm mb-2">{String(errors.cats_seen)}</Text>}
-              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Pienso seco (gramos) *</Text>
-              <View className="flex-row gap-3 mb-4">
+              <Text className="text-base font-semibold text-[#1A1A2E] mb-2">Gatos vistos *</Text>
+              <TextInput className={`bg-white rounded-lg border border-gray-300 px-4 py-3 mb-6 text-base text-[#1A1A2E]${touched.cats_seen && errors.cats_seen ? ' border-red-600' : ''}`} placeholder="0" placeholderTextColor="#999" keyboardType="number-pad" value={values.cats_seen} onChangeText={handleChange('cats_seen')} />
+              {touched.cats_seen && errors.cats_seen && <Text className="text-sm text-red-500 mt-1 mb-2">{String(errors.cats_seen)}</Text>}
+              <Text className="text-base font-semibold text-[#1A1A2E] mb-3">Pienso seco (gramos) *</Text>
+              <View className="flex-row gap-3 mb-6">
                 <TouchableOpacity className={`flex-1 rounded-lg border-2 py-2.5 items-center${foodGrams === 200 ? ' bg-[#E85D04] border-[#E85D04]' : ' bg-white border-gray-300'}`} onPress={() => setFoodGrams(foodGrams === 200 ? null : 200)}>
                   <Text className={`text-base font-semibold${foodGrams === 200 ? ' text-white' : ' text-gray-600'}`}>200g</Text>
                 </TouchableOpacity>
@@ -84,12 +84,12 @@ export default function NewVisitScreen() {
                   <Text className={`text-base font-semibold${foodGrams === 1000 ? ' text-white' : ' text-gray-600'}`}>1kg</Text>
                 </TouchableOpacity>
               </View>
-              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Latas (opt)</Text>
-              <TextInput className={`bg-white rounded-lg border-2 px-3 py-3 mb-2 text-base text-[#1A1A2E]${touched.wet_food_cans && errors.wet_food_cans ? ' border-red-600' : ' border-gray-300'}`} placeholder="0" keyboardType="number-pad" value={values.wet_food_cans} onChangeText={handleChange('wet_food_cans')} />
-              {touched.wet_food_cans && errors.wet_food_cans && <Text className="text-red-600 text-sm mb-2">{String(errors.wet_food_cans)}</Text>}
-              <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-1">Notas (opt)</Text>
-              <TextInput className="bg-white rounded-lg border-2 border-gray-300 px-3 py-3 mb-2 text-base text-[#1A1A2E] h-24" placeholder="Observaciones..." multiline numberOfLines={4} value={values.notes} onChangeText={handleChange('notes')} />
-              {touched.notes && errors.notes && <Text className="text-red-600 text-sm mb-2">{String(errors.notes)}</Text>}
+              <Text className="text-base font-semibold text-[#1A1A2E] mb-2">Latas de comida húmeda (opcional)</Text>
+              <TextInput className={`bg-white rounded-lg border border-gray-300 px-4 py-3 mb-6 text-base text-[#1A1A2E]${touched.wet_food_cans && errors.wet_food_cans ? ' border-red-600' : ''}`} placeholder="0" placeholderTextColor="#999" keyboardType="number-pad" value={values.wet_food_cans} onChangeText={handleChange('wet_food_cans')} />
+              {touched.wet_food_cans && errors.wet_food_cans && <Text className="text-sm text-red-500 mt-1 mb-2">{String(errors.wet_food_cans)}</Text>}
+              <Text className="text-base font-semibold text-[#1A1A2E] mb-2">Notas (opcional)</Text>
+              <TextInput className="bg-white rounded-lg border border-gray-300 px-4 py-3 mb-6 text-base text-[#1A1A2E]" placeholder="Observaciones, estado de los gatos..." placeholderTextColor="#999" multiline numberOfLines={4} value={values.notes} onChangeText={handleChange('notes')} />
+              {touched.notes && errors.notes && <Text className="text-sm text-red-500 mt-1 mb-2">{String(errors.notes)}</Text>}
               <TouchableOpacity className={`bg-[#E85D04] rounded-xl py-4 items-center my-6${isSubmitting ? ' opacity-60' : ''}`} onPress={() => submit()} disabled={isSubmitting}>
                 {isSubmitting ? <ActivityIndicator color="#FFF" /> : <Text className="text-white text-base font-bold">Guardar visita</Text>}
               </TouchableOpacity>
