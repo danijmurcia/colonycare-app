@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -30,7 +29,6 @@ const loginSchema = Yup.object().shape({
 
 export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
   const toast = useToast();
-
   const { login } = useAuth();
 
   const handleLoginSubmit = async (
@@ -50,140 +48,86 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-slate-50">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.emoji}>🐱</Text>
-          <Text style={styles.title}>ColonyCare</Text>
-          <Text style={styles.subtitle}>Gestión de colonias felinas</Text>
-        </View>
+        <View className="flex-1 justify-between px-6 py-12">
+          <View className="items-center mt-6">
+            <Text className="text-8xl mb-4">🐱</Text>
+            <Text className="text-5xl font-black text-[#1A1A2E] italic mb-2">ColonyCare</Text>
+            <Text className="text-base text-gray-600">Gestión de colonias felinas</Text>
+          </View>
 
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={loginSchema}
-          onSubmit={handleLoginSubmit}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
-            <View>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  touched.email && errors.email && styles.inputError,
-                ]}
-                placeholder="your@email.com"
-                placeholderTextColor="#aaa"
-                value={values.email}
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              {touched.email && errors.email && (
-                <Text style={styles.error}>⚠ {errors.email}</Text>
-              )}
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={loginSchema}
+            onSubmit={handleLoginSubmit}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              isSubmitting,
+            }) => (
+              <View>
+                <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-4">Email</Text>
+                <TextInput
+                  className={`bg-white rounded-xl p-4 border-2 text-base text-[#1A1A2E]${
+                    touched.email && errors.email ? ' border-red-600' : ' border-slate-200'
+                  }`}
+                  placeholder="your@email.com"
+                  placeholderTextColor="#aaa"
+                  value={values.email}
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                {touched.email && errors.email && (
+                  <Text className="text-sm text-red-600 mt-1 mb-1">⚠ {errors.email}</Text>
+                )}
 
-              <Text style={styles.label}>Contraseña</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  touched.password && errors.password && styles.inputError,
-                ]}
-                placeholder="••••••••"
-                placeholderTextColor="#aaa"
-                value={values.password}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                secureTextEntry
-              />
-              {touched.password && errors.password && (
-                <Text style={styles.error}>⚠ {errors.password}</Text>
-              )}
+                <Text className="text-base font-bold text-[#1A1A2E] mb-2 mt-4">Contraseña</Text>
+                <TextInput
+                  className={`bg-white rounded-xl p-4 border-2 text-base text-[#1A1A2E]${
+                    touched.password && errors.password ? ' border-red-600' : ' border-slate-200'
+                  }`}
+                  placeholder="••••••••"
+                  placeholderTextColor="#aaa"
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  secureTextEntry
+                />
+                {touched.password && errors.password && (
+                  <Text className="text-sm text-red-600 mt-1 mb-1">⚠ {errors.password}</Text>
+                )}
 
-              <TouchableOpacity
-                style={[styles.button, isSubmitting && styles.buttonDisabled]}
-                onPress={() => handleSubmit()}
-                disabled={isSubmitting}
-              >
-                <Text style={styles.buttonText}>
-                  {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </Formik>
+                <TouchableOpacity
+                  className={`bg-[#E85D04] rounded-xl p-[18px] items-center mt-7${
+                    isSubmitting ? ' opacity-60' : ''
+                  }`}
+                  onPress={() => handleSubmit()}
+                  disabled={isSubmitting}
+                >
+                  <Text className="text-white text-[17px] font-bold">
+                    {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>¿No tienes cuenta? </Text>
-          <TouchableOpacity onPress={onGoToRegister}>
-            <Text style={styles.link}>Regístrate</Text>
-          </TouchableOpacity>
-        </View>
+          <View className="flex-row justify-center items-center">
+            <Text className="text-gray-600 text-sm">¿No tienes cuenta? </Text>
+            <TouchableOpacity onPress={onGoToRegister}>
+              <Text className="text-[#E85D04] font-bold text-sm">Regístrate</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8F9FA" },
-  content: {
-    flex: 1,
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-    paddingVertical: 48,
-  },
-  header: { alignItems: "center", marginTop: 24 },
-  emoji: { fontSize: 72, marginBottom: 16 },
-  title: {
-    fontSize: 42,
-    fontWeight: "900",
-    color: "#1A1A2E",
-    fontStyle: "italic",
-    marginBottom: 8,
-  },
-  subtitle: { fontSize: 15, color: "#666666" },
-  label: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#1A1A2E",
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  input: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1.5,
-    borderColor: "#E0E0E0",
-    fontSize: 16,
-    color: "#1A1A2E",
-  },
-  inputError: { borderColor: "#D32F2F" },
-  error: { fontSize: 13, color: "#D32F2F", marginTop: 4, marginBottom: 4 },
-  button: {
-    backgroundColor: "#E85D04",
-    borderRadius: 12,
-    padding: 18,
-    alignItems: "center",
-    marginTop: 28,
-  },
-  buttonDisabled: { opacity: 0.6 },
-  buttonText: { color: "#FFFFFF", fontSize: 17, fontWeight: "700" },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footerText: { color: "#666666", fontSize: 14 },
-  link: { color: "#E85D04", fontWeight: "700", fontSize: 14 },
-});

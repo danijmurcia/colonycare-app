@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './global.css';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from 'react-native-toast-notifications';

@@ -18,6 +18,8 @@ services:
       - ./metro.config.js:/app/metro.config.js
       - ./tailwind.config.js:/app/tailwind.config.js
       - ./tsconfig.json:/app/tsconfig.json
+      - ./global.css:/app/global.css
+      - ./nativewind-env.d.ts:/app/nativewind-env.d.ts
       - node_modules:/app/node_modules
     env_file:
       - .env
