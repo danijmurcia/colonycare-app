@@ -40,3 +40,7 @@ yarn-error.*
 /ios
 /android
 .claude/
+
+# Env files with credentials
+.env
+.env.local

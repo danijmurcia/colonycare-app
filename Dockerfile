@@ -8,8 +8,12 @@ COPY package*.json ./
 # Instalar dependencias
 RUN npm install
 
+# Copiar entrypoint
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
 # Exponer puertos
 EXPOSE 8081 19000 19001
 
-# Comando: usar npm start con --tunnel
-CMD ["npm", "start", "--", "--tunnel"]
+# Usar entrypoint para login + start
+ENTRYPOINT ["sh", "./entrypoint.sh"]
