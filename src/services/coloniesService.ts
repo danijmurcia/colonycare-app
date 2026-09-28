@@ -1,4 +1,4 @@
-import httpManager from './HttpManager';
+import httpManager from "./HttpManager";
 
 export interface Colony {
   id: number;
@@ -38,7 +38,7 @@ export interface VisitRequest {
 interface ApiResponse<T> {
   success: boolean;
   message: string;
-   T;
+  data: T;
 }
 
 export const coloniesService = {
@@ -48,27 +48,27 @@ export const coloniesService = {
   },
 
   getPending: async (days: number = 3): Promise<Colony[]> => {
-    const response = await httpManager.get<ApiResponse<Colony[]>>(`/colonies/pending?days=${days}`);
+    const response = await httpManager.get<ApiResponse<Colony[]>>('/colonies/pending?days=' + days);
     return response.data.data;
   },
 
   getById: async (id: number): Promise<Colony> => {
-    const response = await httpManager.get<ApiResponse<Colony>>(`/colonies/${id}`);
+    const response = await httpManager.get<ApiResponse<Colony>>('/colonies/' + id);
     return response.data.data;
   },
 
-  create: async ( Omit<Colony, 'id'>): Promise<Colony> => {
+  create: async (data: Omit<Colony, 'id'>): Promise<Colony> => {
     const response = await httpManager.post<ApiResponse<Colony>>('/colonies/', data);
     return response.data.data;
   },
 
   getVisits: async (colonyId: number): Promise<Visit[]> => {
-    const response = await httpManager.get<ApiResponse<Visit[]>>(`/colonies/${colonyId}/visits`);
+    const response = await httpManager.get<ApiResponse<Visit[]>>('/colonies/' + colonyId + '/visits');
     return response.data.data;
   },
 
   createVisit: async (colonyId: number,  VisitRequest): Promise<Visit> => {
-    const response = await httpManager.post<ApiResponse<Visit>>(`/colonies/${colonyId}/visits`, data);
+    const response = await httpManager.post<ApiResponse<Visit>>('/colonies/' + colonyId + '/visits', data);
     return response.data.data;
   },
 };
