@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  View, Text, StyleSheet, FlatList, TouchableOpacity,
+  View, Text, FlatList, TouchableOpacity,
   RefreshControl, ActivityIndicator, PanResponder, Animated, Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -38,19 +38,19 @@ function SwipeableColonyCard({ item, onPress, onDelete, canDelete }: {
   })).current;
 
   return (
-    <View style={styles.swipeContainer}>
+    <View className="my-2 relative">
       {canDelete && (
-        <View style={styles.deleteAction}>
-          <TouchableOpacity style={styles.deleteBtn} onPress={onDelete}>
-            <Text style={styles.deleteBtnText}>Eliminar</Text>
+        <View className="absolute right-0 top-0 bottom-0 w-20 justify-center items-center bg-red-500 rounded-xl">
+          <TouchableOpacity className="justify-center items-center w-20 flex-1" onPress={onDelete}>
+            <Text className="text-white font-bold text-sm">Eliminar</Text>
           </TouchableOpacity>
         </View>
       )}
       <Animated.View style={{ transform: [{ translateX }] }} {...panResponder.panHandlers}>
-        <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-          <Text style={styles.cardTitle}>{item.name}</Text>
-          <Text style={styles.cardText}>{item.location}</Text>
-          <Text style={styles.cardText}>{item.estimated_cats || 0} gatos</Text>
+        <TouchableOpacity className="bg-white rounded-xl p-4 border-l-4 border-[#E85D04]" onPress={onPress} activeOpacity={0.8}>
+          <Text className="text-base font-bold text-[#1A1A2E] mb-2">{item.name}</Text>
+          <Text className="text-sm text-gray-500 mb-1">{item.location}</Text>
+          <Text className="text-sm text-gray-500">{item.estimated_cats || 0} gatos</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -107,21 +107,23 @@ export default function ColoniesScreen() {
   useFocusEffect(React.useCallback(() => { loadColonies(); }, [loadColonies]));
 
   if (loading && !refreshing)
-    return <View style={styles.centerLoader}><ActivityIndicator size="large" color="#E85D04" /></View>;
+    return <View className="flex-1 justify-center items-center"><ActivityIndicator size="large" color="#E85D04" /></View>;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Colonias</Text>
-        <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate("colony-create" as never)}>
-          <Text style={styles.addBtnText}>Crear colonia</Text>
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <View className="flex-row justify-between items-center px-4 py-3">
+        <Text className="text-2xl font-black text-[#1A1A2E]">Colonias</Text>
+        <TouchableOpacity className="bg-[#E85D04] rounded-lg px-3 py-2" onPress={() => navigation.navigate("colony-create" as never)}>
+          <Text className="text-white font-bold text-sm">Crear colonia</Text>
         </TouchableOpacity>
       </View>
       {colonies.length === 0 ? (
-        <View style={styles.empty}><Text style={styles.emptyText}>No hay colonias todavía</Text></View>
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-sm text-gray-400">No hay colonias todavía</Text>
+        </View>
       ) : (
         <FlatList data={colonies} keyExtractor={(item) => String(item.id)}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 20 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#E85D04" />}
           renderItem={({ item }) => (
             <SwipeableColonyCard item={item}
@@ -135,22 +137,3 @@ export default function ColoniesScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8F9FA" },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12 },
-  title: { fontSize: 22, fontWeight: "800", color: "#1A1A2E" },
-  addBtn: { backgroundColor: "#E85D04", borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8 },
-  addBtnText: { color: "#FFF", fontWeight: "700", fontSize: 12 },
-  list: { paddingHorizontal: 12, paddingBottom: 20 },
-  swipeContainer: { marginVertical: 8, position: "relative" },
-  deleteAction: { position: "absolute", right: 0, top: 0, bottom: 0, width: DELETE_BTN_WIDTH, justifyContent: "center", alignItems: "center", backgroundColor: "#FF3B30", borderRadius: 12 },
-  deleteBtn: { justifyContent: "center", alignItems: "center", width: DELETE_BTN_WIDTH, flex: 1 },
-  deleteBtnText: { color: "#FFF", fontWeight: "700", fontSize: 13 },
-  card: { backgroundColor: "#FFF", borderRadius: 12, padding: 16, borderLeftWidth: 4, borderLeftColor: "#E85D04" },
-  cardTitle: { fontSize: 16, fontWeight: "700", color: "#1A1A2E", marginBottom: 8 },
-  cardText: { fontSize: 13, color: "#666", marginBottom: 4 },
-  centerLoader: { flex: 1, justifyContent: "center", alignItems: "center" },
-  empty: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { fontSize: 14, color: "#999" },
-});
