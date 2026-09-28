@@ -65,7 +65,7 @@ export default function ColoniasScreen() {
         <FlatList
           data={colonies}
           renderItem={renderColony}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => String(item.id)}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#E85D04" />}
         />
