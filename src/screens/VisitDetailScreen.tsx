@@ -50,12 +50,6 @@ export default function VisitDetailScreen() {
             <Text style={styles.value}>{visit.wet_food_cans}</Text>
           </View>
         )}
-        {visit.can_size && (
-          <View style={styles.card}>
-            <Text style={styles.label}>📦 Tamaño de lata</Text>
-            <Text style={styles.value}>{visit.can_size === 'small' ? 'Pequeña' : 'Grande'}</Text>
-          </View>
-        )}
         {visit.notes && (
           <View style={styles.card}>
             <Text style={styles.label}>📝 Notas</Text>
