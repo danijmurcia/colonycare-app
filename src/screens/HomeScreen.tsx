@@ -16,6 +16,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabParamList, ColoniesStackParamList } from "../navigation/types";
 import { useAuth } from "../context/AuthContext";
 import { coloniesService, Colony } from "../services/coloniesService";
+import { useUserStats } from "../hooks/useUserStats";
 
 export default function HomeScreen() {
   const { logout } = useAuth();
@@ -28,6 +29,7 @@ export default function HomeScreen() {
   const [pending, setPending] = useState<Colony[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { stats } = useUserStats();
 
   const fetchData = async () => {
     try {
@@ -71,6 +73,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -79,47 +82,56 @@ export default function HomeScreen() {
           />
         }
       >
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>🐱 ColonyCare</Text>
-            <Text style={styles.date}>
-              {new Date().toLocaleDateString("es-ES", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-              })}
-            </Text>
+        {/* HEADER MEJORADO */}
+        <View style={styles.headerGradient}>
+          <View style={styles.headerContent}>
+            <View>
+              <Text style={styles.greeting}>🐱 ColonyCare</Text>
+              <Text style={styles.headerSubtitle}>Sistema de gestión felina</Text>
+              <Text style={styles.date}>
+                {new Date().toLocaleDateString("es-ES", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
+              <Text style={styles.logoutText}>🚪</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
-            <Text style={styles.logoutText}>Salir</Text>
+        </View>
+
+        {/* STATS PRINCIPALES */}
+        <View style={styles.mainStatsGrid}>
+          <TouchableOpacity
+            style={styles.mainStatCard}
+            onPress={() => navigation.navigate('colonies', { screen: 'colonies-list' })}
+          >
+            <Text style={styles.mainStatIcon}>🏘️</Text>
+            <Text style={styles.mainStatNumber}>{colonies.length}</Text>
+            <Text style={styles.mainStatLabel}>Colonias</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.mainStatCard}>
+            <Text style={styles.mainStatIcon}>🐱</Text>
+            <Text style={styles.mainStatNumber}>{totalGatos}</Text>
+            <Text style={styles.mainStatLabel}>Gatos Totales</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.mainStatCard}>
+            <Text style={styles.mainStatIcon}>⚠️</Text>
+            <Text style={styles.mainStatNumber}>{pending.length}</Text>
+            <Text style={styles.mainStatLabel}>Pendientes</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.statsContainer}>
-          <View style={[styles.statCard, styles.cardBlue]}>
-            <Text style={styles.statNumber}>{colonies.length}</Text>
-            <Text style={styles.statLabel}>Colonias</Text>
-          </View>
-          <View style={[styles.statCard, styles.cardOrange]}>
-            <Text style={styles.statNumber}>{totalGatos}</Text>
-            <Text style={styles.statLabel}>Gatos estimados</Text>
-          </View>
-          <View
-            style={[
-              styles.statCard,
-              pending.length > 0 ? styles.cardRed : styles.cardGreen,
-            ]}
-          >
-            <Text style={styles.statNumber}>{pending.length}</Text>
-            <Text style={styles.statLabel}>Sin visitar</Text>
-          </View>
-        </View>
+
+        {/* PENDIENTES - PRIMERO */}
         {pending.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>⚠️ Pendientes de visita</Text>
-            {pending.map((c) => (
+            <Text style={styles.sectionTitle}>📋 Visitas Pendientes</Text>
+            {pending.slice(0, 3).map((c) => (
               <TouchableOpacity
                 key={c.id}
-                style={styles.pendingCard}
+                style={styles.pendingCardNew}
                 onPress={() =>
                   navigation.navigate("colonies", {
                     screen: "colony-detail",
@@ -127,130 +139,112 @@ export default function HomeScreen() {
                   })
                 }
               >
-                <Text style={styles.pendingName}>{c.name}</Text>
-                <Text style={styles.pendingDetail}>
-                  📍 {c.location} · 🐱 {c.estimated_cats} gatos
-                </Text>
+                <Text style={styles.pendingIconBox}>📌</Text>
+                <View style={styles.pendingInfo}>
+                  <Text style={styles.pendingName}>{c.name}</Text>
+                  <Text style={styles.pendingDetail}>📍 {c.location} • 🐱 {c.estimated_cats} gatos</Text>
+                </View>
+                <Text style={styles.pendingArrow}>›</Text>
               </TouchableOpacity>
             ))}
           </View>
         )}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🏘️ Mis Colonias</Text>
-          {colonies.length === 0 ? (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                No hay colonias registradas aún.
-              </Text>
+
+        {/* MI RESUMEN - CARD COMPLETO */}
+        {stats && (
+          <View style={styles.myResumenCard}>
+            <Text style={styles.myResumenTitle}>📊 Mi Resumen</Text>
+            {/* Fila superior: 3 números */}
+            <View style={styles.myResumenGrid}>
+              <View style={styles.myResumenItem}>
+                <Text style={styles.myResumenBig}>{stats.total_visits || 0}</Text>
+                <Text style={styles.myResumenLabel}>Visitas</Text>
+              </View>
+              <View style={styles.myResumenDivider} />
+              <View style={styles.myResumenItem}>
+                <Text style={styles.myResumenBig}>{stats.total_colonies || 0}</Text>
+                <Text style={styles.myResumenLabel}>Colonias</Text>
+              </View>
+              <View style={styles.myResumenDivider} />
+              <View style={styles.myResumenItem}>
+                <Text style={styles.myResumenBig}>
+                  {stats.total_colonies ? Math.round(stats.total_visits / stats.total_colonies) : 0}
+                </Text>
+                <Text style={styles.myResumenLabel}>Prom. visitas</Text>
+              </View>
             </View>
-          ) : (
-            colonies.map((c) => (
-              <TouchableOpacity
-                key={c.id}
-                style={styles.colonyCard}
-                onPress={() =>
-                  navigation.navigate("colonies", {
-                    screen: "colony-detail",
-                    params: { colonyId: c.id, returnTo: "home" },
-                  })
-                }
-              >
-                <View style={styles.colonyInfo}>
-                  <Text style={styles.colonyName}>{c.name}</Text>
-                  <Text style={styles.colonyLocation}>📍 {c.location}</Text>
+
+            {/* Separador */}
+            <View style={styles.myResumenHRule} />
+
+            {/* Colonia más visitada */}
+            {stats.most_visited && (
+              <View style={styles.myResumenRow}>
+                <Text style={styles.myResumenRowIcon}>🏆</Text>
+                <View style={styles.myResumenRowInfo}>
+                  <Text style={styles.myResumenRowLabel}>Colonia más visitada</Text>
+                  <Text style={styles.myResumenRowValue}>{stats.most_visited.name}</Text>
                 </View>
-                <View style={styles.colonyBadge}>
-                  <Text style={styles.colonyBadgeText}>
-                    {c.estimated_cats} 🐱
-                  </Text>
+                <Text style={styles.myResumenRowBadge}>{stats.most_visited.count} visitas</Text>
+              </View>
+            )}
+
+            {/* Última visita */}
+            {stats.last_visit && (
+              <View style={[styles.myResumenRow, { marginBottom: 0 }]}>
+                <Text style={styles.myResumenRowIcon}>🕒</Text>
+                <View style={styles.myResumenRowInfo}>
+                  <Text style={styles.myResumenRowLabel}>Fecha última visita</Text>
+                  <Text style={styles.myResumenRowValue}>{stats.last_visit.colony}</Text>
                 </View>
-              </TouchableOpacity>
-            ))
-          )}
-        </View>
+                <Text style={styles.myResumenRowDate}>
+                  {new Date(stats.last_visit.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8F9FA" },
-  scrollView: { flex: 1, paddingHorizontal: 16 },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  greeting: { fontSize: 26, fontWeight: "800", color: "#1A1A2E" },
-  date: {
-    fontSize: 13,
-    color: "#999",
-    marginTop: 4,
-    textTransform: "capitalize",
-  },
-  logoutBtn: {
-    backgroundColor: "#E85D04",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  logoutText: { color: "#FFF", fontSize: 12, fontWeight: "600" },
-  statsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 24,
-    gap: 8,
-  },
-  statCard: { flex: 1, padding: 14, borderRadius: 12, alignItems: "center" },
-  cardBlue: { backgroundColor: "#007AFF" },
-  cardOrange: { backgroundColor: "#E85D04" },
-  cardRed: { backgroundColor: "#D32F2F" },
-  cardGreen: { backgroundColor: "#2E7D32" },
-  statNumber: { fontSize: 26, fontWeight: "900", color: "#FFF" },
-  statLabel: { fontSize: 10, color: "#FFF", marginTop: 4, textAlign: "center" },
-  section: { marginBottom: 24 },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#1A1A2E",
-    marginBottom: 12,
-  },
-  pendingCard: {
-    backgroundColor: "#FFF3F3",
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: "#D32F2F",
-  },
-  pendingName: { fontSize: 15, fontWeight: "700", color: "#1A1A2E" },
-  pendingDetail: { fontSize: 12, color: "#666", marginTop: 4 },
-  colonyCard: {
-    backgroundColor: "#FFF",
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 8,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#F0F0F0",
-  },
-  colonyInfo: { flex: 1 },
-  colonyName: { fontSize: 15, fontWeight: "700", color: "#1A1A2E" },
-  colonyLocation: { fontSize: 12, color: "#999", marginTop: 3 },
-  colonyBadge: {
-    backgroundColor: "#FFF0E8",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  colonyBadgeText: { fontSize: 13, fontWeight: "700", color: "#E85D04" },
-  emptyBox: {
-    backgroundColor: "#FFF",
-    borderRadius: 12,
-    padding: 24,
-    alignItems: "center",
-  },
-  emptyText: { color: "#999", fontSize: 14 },
+  container: { flex: 1, backgroundColor: "#F5F7FA" },
+  scrollView: { flex: 1, paddingHorizontal: 0 },
+  headerGradient: { backgroundColor: "#FFF", paddingTop: 0, paddingBottom: 24, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 4 },
+  headerContent: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", paddingHorizontal: 16, paddingTop: 12 },
+  greeting: { fontSize: 28, fontWeight: "900", color: "#1A1A2E", letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 13, color: "#999", marginTop: 4, fontWeight: "500" },
+  date: { fontSize: 12, color: "#BBB", marginTop: 8, textTransform: "capitalize", fontWeight: "500" },
+  logoutBtn: { backgroundColor: "#FFE8D6", width: 44, height: 44, borderRadius: 12, justifyContent: "center", alignItems: "center" },
+  logoutText: { fontSize: 20 },
+  mainStatsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, paddingHorizontal: 16, marginTop: 24, marginBottom: 24 },
+  mainStatCard: { flex: 1, backgroundColor: "#FFF", borderRadius: 16, padding: 18, alignItems: "center", minWidth: "47%", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 2, borderWidth: 1, borderColor: "#F0F0F0" },
+  mainStatIcon: { fontSize: 32, marginBottom: 12 },
+  mainStatNumber: { fontSize: 26, fontWeight: "900", color: "#E85D04", marginBottom: 4 },
+  mainStatLabel: { fontSize: 12, fontWeight: "600", color: "#999", textAlign: "center" },
+  section: { marginBottom: 28, paddingHorizontal: 16 },
+  sectionTitle: { fontSize: 16, fontWeight: "800", color: "#1A1A2E", marginBottom: 14, letterSpacing: -0.3 },
+  pendingCardNew: { backgroundColor: "#FFF", borderRadius: 14, padding: 16, marginBottom: 10, flexDirection: "row", alignItems: "center", gap: 14, borderLeftWidth: 4, borderLeftColor: "#FF6B6B", shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1 },
+  pendingIconBox: { fontSize: 24, width: 44, height: 44, backgroundColor: "#FFE8E8", borderRadius: 12, textAlign: "center", textAlignVertical: "center" },
+  pendingInfo: { flex: 1 },
+  pendingName: { fontSize: 15, fontWeight: "700", color: "#1A1A2E", marginBottom: 4 },
+  pendingDetail: { fontSize: 12, color: "#999", fontWeight: "500" },
+  pendingArrow: { fontSize: 20, color: "#E85D04", fontWeight: "900" },
+  myResumenCard: { backgroundColor: "#FFF", borderRadius: 18, padding: 20, marginHorizontal: 16, marginBottom: 28, borderWidth: 1.5, borderColor: "#F0F0F0", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 10, elevation: 3 },
+  myResumenTitle: { fontSize: 16, fontWeight: "800", color: "#1A1A2E", marginBottom: 18 },
+  myResumenGrid: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 4 },
+  myResumenItem: { flex: 1, alignItems: "center" },
+  myResumenLabel: { fontSize: 11, fontWeight: "600", color: "#AAA", marginTop: 4 },
+  myResumenBig: { fontSize: 26, fontWeight: "900", color: "#E85D04" },
+  myResumenDivider: { width: 1, height: 44, backgroundColor: "#F0F0F0" },
+  myResumenHRule: { height: 1, backgroundColor: "#F0F0F0", marginVertical: 16 },
+  myResumenRow: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 14 },
+  myResumenRowIcon: { fontSize: 22, width: 40, height: 40, backgroundColor: "#FFF5EE", borderRadius: 10, textAlign: "center", textAlignVertical: "center" },
+  myResumenRowInfo: { flex: 1 },
+  myResumenRowLabel: { fontSize: 11, fontWeight: "600", color: "#AAA", marginBottom: 2 },
+  myResumenRowValue: { fontSize: 14, fontWeight: "700", color: "#1A1A2E" },
+  myResumenRowBadge: { backgroundColor: "#FFF0E8", color: "#E85D04", fontSize: 12, fontWeight: "700", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, overflow: "hidden" },
+  myResumenRowDate: { fontSize: 12, fontWeight: "600", color: "#999", textAlign: "right" },
 });
