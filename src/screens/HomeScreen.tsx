@@ -113,8 +113,8 @@ export default function HomeScreen() {
                 })}
               </Text>
             </View>
-            <TouchableOpacity className="w-9 h-9 rounded-full bg-orange-100 items-center justify-center" onPress={logout}>
-              <Text className="text-base">🚪</Text>
+            <TouchableOpacity className="bg-orange-600 rounded-lg px-3 py-1.5 items-center justify-center" onPress={logout}>
+              <Text className="text-white text-xs font-bold">🚪 Cerrar</Text>
             </TouchableOpacity>
           </View>
         </View>
