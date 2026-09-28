@@ -51,4 +51,9 @@ export const authService = {
     const response = await httpManager.get<{ data: UserProfile }>('/auth/me');
     return response.data.data;
   },
+
+  updateMe: async (data: { first_name?: string; last_name?: string; phone?: string }): Promise<UserProfile> => {
+    const response = await httpManager.put<{ data: UserProfile }>('/auth/me', data);
+    return response.data.data;
+  },
 };

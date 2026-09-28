@@ -9,4 +9,4 @@ else
 fi
 
 # Start Expo with tunnel
-exec npm start -- --tunnel
+exec npm start -- --lan
