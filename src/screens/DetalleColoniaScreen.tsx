@@ -16,8 +16,9 @@ export default function DetalleColoniaScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
+      setLoading(true);
       loadColonyData();
-    }, [])
+    }, [colonyId])
   );
 
   const loadColonyData = async () => {

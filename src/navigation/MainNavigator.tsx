@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import HomeScreen from '../screens/HomeScreen';
 import ColoniasScreen from '../screens/ColoniasScreen';
 import DetalleColoniaScreen from '../screens/DetalleColoniaScreen';
@@ -18,14 +19,22 @@ function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
   return <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>{icon}</Text>;
 }
 
+const coloniesStackRef = React.createRef<any>();
+
 function ColoniesStackNavigator() {
   return (
-    <ColoniesStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="colonies-list">
-      <ColoniesStack.Screen name="colonies-list" component={ColoniasScreen} />
-      <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
-      <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
-      <ColoniesStack.Screen name="visit-new" component={NuevaVisitaScreen} />
-      <ColoniesStack.Screen name="visit-detail" component={VisitaDetalleScreen} />
+    <ColoniesStack.Navigator
+      ref={coloniesStackRef}
+      screenOptions={{ headerShown: false }}
+      initialRouteName="colonies-list"
+    >
+      <ColoniesStack.Group>
+        <ColoniesStack.Screen name="colonies-list" component={ColoniasScreen} />
+        <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
+        <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
+        <ColoniesStack.Screen name="visit-new" component={NuevaVisitaScreen} />
+        <ColoniesStack.Screen name="visit-detail" component={VisitaDetalleScreen} />
+      </ColoniesStack.Group>
     </ColoniesStack.Navigator>
   );
 }
@@ -59,16 +68,24 @@ export default function MainNavigator() {
       <Tab.Screen
         name="colonies"
         component={ColoniesStackNavigator}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // Si el stack tiene más de 1 screen, resetea al listado
+            setTimeout(() => {
+              const state = coloniesStackRef.current?.getRootState?.();
+              if (state?.routes?.length > 1) {
+                coloniesStackRef.current?.reset({
+                  index: 0,
+                  routes: [{ name: 'colonies-list' as any }],
+                });
+              }
+            }, 0);
+          },
+        })}
         options={{
           tabBarLabel: 'Colonias',
           tabBarIcon: ({ focused }) => <TabIcon icon="🐱" focused={focused} />,
         }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            navigation.navigate('colonies', { screen: 'colonies-list' });
-          },
-        })}
       />
       <Tab.Screen
         name="profile"
