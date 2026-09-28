@@ -35,6 +35,7 @@ export default function HomeScreen() {
   };
 
   useEffect(() => { fetchData(); }, []);
+   useFocusEffect(React.useCallback(() => { fetchData(); }, []));
   const onRefresh = () => { setRefreshing(true); fetchData(); };
   const totalGatos = colonies.reduce((acc, c) => acc + c.estimated_cats, 0);
 

@@ -5,6 +5,7 @@ export type ColoniesStackParamList = {
   'colony-detail': { colonyId: number; colonyName?: string };
   'colony-create': undefined;
   'visit-new': { colonyId: number; colonyName?: string };
+  'visit-detail': { visit: any };
 };
 
 export type TabParamList = {

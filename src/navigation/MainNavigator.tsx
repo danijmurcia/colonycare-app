@@ -5,6 +5,7 @@ import { Text } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import ColoniasScreen from '../screens/ColoniasScreen';
 import DetalleColoniaScreen from '../screens/DetalleColoniaScreen';
+import VisitaDetalleScreen from '../screens/VisitaDetalleScreen';
 import ColoniaCreateScreen from '../screens/ColoniaCreateScreen';
 import NuevaVisitaScreen from '../screens/NuevaVisitaScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -24,6 +25,7 @@ function ColoniesStackNavigator() {
       <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
       <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
       <ColoniesStack.Screen name="visit-new" component={NuevaVisitaScreen} />
+      <ColoniesStack.Screen name="visit-detail" component={VisitaDetalleScreen} />
     </ColoniesStack.Navigator>
   );
 }
