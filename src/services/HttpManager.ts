@@ -9,11 +9,18 @@ const httpManager: AxiosInstance = axios.create({
   },
 });
 
+let _onUnauthorized: (() => void) | null = null;
+
+export const setOnUnauthorized = (callback: () => void) => {
+  _onUnauthorized = callback;
+};
+
 httpManager.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      console.warn('Unauthorized - clearToken');
+      console.warn('Token expirado - redirigiendo al login');
+      if (_onUnauthorized) _onUnauthorized();
     }
     return Promise.reject(error);
   }

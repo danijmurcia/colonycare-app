@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
-import { setAuthToken } from '../services/HttpManager';
+import { setAuthToken, setOnUnauthorized } from '../services/HttpManager';
 
 const storage = {
   getItem: (key: string): Promise<string | null> => {
@@ -34,6 +34,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setOnUnauthorized(() => {
+      storage.deleteItem(TOKEN_KEY);
+      setAuthToken(null);
+      setToken(null);
+    });
     storage.getItem(TOKEN_KEY)
       .then((savedToken) => {
         if (savedToken) {
