@@ -39,7 +39,7 @@ export default function ColoniasScreen() {
   const renderColony = ({ item }: { item: any }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate('colony-detail' as never, { colonyId: item.id } as never)}
+      onPress={() => navigation.navigate('colony-detail' as any, { colonyId: item.id } as any)}
     >
       <Text style={styles.cardTitle}>{item.name}</Text>
       <Text style={styles.cardText}>📍 {item.location}</Text>
