@@ -599,8 +599,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   infoButton: {
-    fontSize: 18,
-    padding: 8,
+    fontSize: 16,
+    width: 36,
+    height: 36,
+    backgroundColor: '#FFF0E8',
+    borderRadius: 18,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: '#E85D04',
   },
   modalOverlay: {
     position: "absolute",
