@@ -298,17 +298,17 @@ export default function HomeScreen() {
 
             {/* Última visita */}
             {stats.last_visit && (
-              <View style={[styles.myResumenRow, { marginBottom: 0 }]}>
-                <Text style={styles.myResumenRowIcon}>🕒</Text>
-                <View style={styles.myResumenRowInfo}>
-                  <Text style={styles.myResumenRowLabel}>
+              <View className="flex-row items-center gap-3">
+                <Text className="text-2xl w-10 h-10 bg-orange-50 rounded text-center">🕒</Text>
+                <View className="flex-1">
+                  <Text className="text-xs font-semibold text-gray-400 mb-0.5">
                     Fecha última visita
                   </Text>
-                  <Text style={styles.myResumenRowValue}>
+                  <Text className="text-sm font-bold text-[#1A1A2E]">
                     {stats.last_visit.colony}
                   </Text>
                 </View>
-                <Text style={styles.myResumenRowDate}>
+                <Text className="text-xs font-semibold text-gray-500 text-right">
                   {new Date(stats.last_visit.date).toLocaleDateString("es-ES", {
                     day: "2-digit",
                     month: "short",
