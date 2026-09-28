@@ -63,6 +63,12 @@ export default function MainNavigator() {
           tabBarLabel: 'Colonias',
           tabBarIcon: ({ focused }) => <TabIcon icon="🐱" focused={focused} />,
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('colonies', { screen: 'colonies-list' });
+          },
+        })}
       />
       <Tab.Screen
         name="profile"
