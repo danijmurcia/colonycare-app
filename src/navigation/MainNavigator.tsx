@@ -69,13 +69,11 @@ export default function MainNavigator() {
         name="colonies"
         component={ColoniesStackNavigator}
         listeners={({ navigation }) => ({
-          tabPress: () => {
-            setTimeout(() => {
-              coloniesStackRef.current?.reset({
-                index: 0,
-                routes: [{ name: 'colonies-list' as any }],
-              });
-            }, 100);
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('colonies' as never, {
+              screen: 'colonies-list',
+            } as never);
           },
         })}
         options={{
