@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
 
-export default function DetalleColoniaScreen() {
+export default function ColonyDetailScreen() {
   const route = useRoute() as any;
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const { colonyId } = route.params || {};
@@ -30,7 +30,7 @@ export default function DetalleColoniaScreen() {
       setColony(colonyData);
       setVisits(visitsData || []);
     } catch (error) {
-      console.error('Error cargando colonia:', error);
+      console.error('Error loading colony:', error);
     } finally {
       setLoading(false);
     }
@@ -58,18 +58,23 @@ export default function DetalleColoniaScreen() {
       </View>
       <ScrollView style={styles.content}>
         <View style={styles.infoCard}>
-          <Text style={styles.label}>📍 Ubicación</Text>
+          <Text style={styles.label}>📍 Localizacion</Text>
           <Text style={styles.value}>{colony.location}</Text>
         </View>
         <View style={styles.infoCard}>
           <Text style={styles.label}>🐱 Gatos estimados</Text>
           <Text style={styles.value}>{colony.estimated_cats || 0}</Text>
         </View>
-        <TouchableOpacity style={styles.visitBtn} onPress={() => navigation.navigate('visit-new', { colonyId })}>
-          <Text style={styles.visitBtnText}>+ Registrar Visita</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonsRow}>
+          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('colony-edit', { colonyId })}>
+            <Text style={styles.editBtnText}>✎ Editar colonia</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.visitBtn} onPress={() => navigation.navigate('visit-new', { colonyId })}>
+            <Text style={styles.visitBtnText}>+ Registrar visita</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📋 Historial de Visitas ({visits.length})</Text>
+          <Text style={styles.sectionTitle}>📋 Historial de visitas ({visits.length})</Text>
           {visits.length === 0 ? (
             <Text style={styles.noVisits}>Sin visitas registradas</Text>
           ) : (
@@ -97,8 +102,11 @@ const styles = StyleSheet.create({
   visitItem: { backgroundColor: '#FFF', borderRadius: 8, padding: 12, marginBottom: 8 },
   visitDate: { fontSize: 13, fontWeight: '700', color: '#E85D04' },
   visitDetail: { fontSize: 12, color: '#666', marginTop: 4 },
-  visitBtn: { backgroundColor: '#E85D04', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginBottom: 30 },
-  visitBtnText: { color: '#FFF', fontSize: 15, fontWeight: '700' },
+  buttonsRow: { flexDirection: 'row', gap: 12, marginBottom: 30 },
+  editBtn: { flex: 1, backgroundColor: '#FF9500', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  editBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700' },
+  visitBtn: { flex: 1, backgroundColor: '#E85D04', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  visitBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700' },
   centerLoader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   errorText: { fontSize: 14, color: '#999', textAlign: 'center', marginTop: 20 },
 });

@@ -4,11 +4,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from '../screens/HomeScreen';
-import ColoniasScreen from '../screens/ColoniasScreen';
-import DetalleColoniaScreen from '../screens/DetalleColoniaScreen';
-import VisitaDetalleScreen from '../screens/VisitaDetalleScreen';
-import ColoniaCreateScreen from '../screens/ColoniaCreateScreen';
-import NuevaVisitaScreen from '../screens/NuevaVisitaScreen';
+import ColoniesScreen from '../screens/ColoniesScreen';
+import ColonyDetailScreen from '../screens/ColonyDetailScreen';
+import EditColonyScreen from '../screens/EditColonyScreen';
+import VisitDetailScreen from '../screens/VisitDetailScreen';
+import ColonyCreateScreen from '../screens/ColonyCreateScreen';
+import NewVisitScreen from '../screens/NewVisitScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { TabParamList, ColoniesStackParamList } from './types';
 
@@ -29,11 +30,12 @@ function ColoniesStackNavigator() {
       initialRouteName="colonies-list"
     >
       <ColoniesStack.Group>
-        <ColoniesStack.Screen name="colonies-list" component={ColoniasScreen} />
-        <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
-        <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
-        <ColoniesStack.Screen name="visit-new" component={NuevaVisitaScreen} />
-        <ColoniesStack.Screen name="visit-detail" component={VisitaDetalleScreen} />
+        <ColoniesStack.Screen name="colonies-list" component={ColoniesScreen} />
+        <ColoniesStack.Screen name="colony-detail" component={ColonyDetailScreen} />
+        <ColoniesStack.Screen name="colony-edit" component={EditColonyScreen} />
+        <ColoniesStack.Screen name="colony-create" component={ColonyCreateScreen} />
+        <ColoniesStack.Screen name="visit-new" component={NewVisitScreen} />
+        <ColoniesStack.Screen name="visit-detail" component={VisitDetailScreen} />
       </ColoniesStack.Group>
     </ColoniesStack.Navigator>
   );

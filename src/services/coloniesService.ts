@@ -62,12 +62,17 @@ export const coloniesService = {
     return response.data.data;
   },
 
+  update: async (id: number, data: Partial<Omit<Colony, 'id'>>): Promise<Colony> => {
+    const response = await httpManager.put<ApiResponse<Colony>>('/colonies/' + id, data);
+    return response.data.data;
+  },
+
   getVisits: async (colonyId: number): Promise<Visit[]> => {
     const response = await httpManager.get<ApiResponse<Visit[]>>('/colonies/' + colonyId + '/visits');
     return response.data.data;
   },
 
-  createVisit: async (colonyId: number, data: VisitRequest): Promise<{ message?: string;  Visit }> => {
+  createVisit: async (colonyId: number, data: VisitRequest): Promise<{ message?: string; data: Visit }> => {
     const response = await httpManager.post<any>('/colonies/' + colonyId + '/visits', data);
     return {
       message: response.data.message || 'Visita registrada correctamente',

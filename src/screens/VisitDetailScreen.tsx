@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
 import { Visit } from '../services/coloniesService';
 
-export default function VisitaDetalleScreen() {
+export default function VisitDetailScreen() {
   const route = useRoute() as any;
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const visit: Visit = route.params?.visit;
@@ -14,72 +14,60 @@ export default function VisitaDetalleScreen() {
   if (!visit) return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.backBtn}>← Volver</Text>
+        <Text style={styles.backBtn}>← Back</Text>
       </TouchableOpacity>
-      <Text style={styles.error}>No se pudo cargar la visita</Text>
+      <Text style={styles.error}>Could not load visit</Text>
     </SafeAreaView>
   );
 
-  const fecha = new Date(visit.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const hora = new Date(visit.date).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  const fecha = new Date(visit.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const hora = new Date(visit.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.backBtn}>← Volver</Text>
+        <Text style={styles.backBtn}>← Back</Text>
       </TouchableOpacity>
       <ScrollView style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>📋 Detalle de Visita</Text>
+          <Text style={styles.title}>📋 Visit Detail</Text>
           <View style={styles.dateBox}>
             <Text style={styles.fecha}>{fecha}</Text>
             <Text style={styles.hora}>{hora}</Text>
           </View>
         </View>
-
         <View style={styles.card}>
-          <Text style={styles.label}>🐱 Gatos vistos</Text>
+          <Text style={styles.label}>🐱 Cats seen</Text>
           <Text style={styles.value}>{visit.cats_seen || 0}</Text>
         </View>
-
         <View style={styles.card}>
-          <Text style={styles.label}>🍽️ Comida seca (gramos)</Text>
+          <Text style={styles.label}>🍽️ Dry food (grams)</Text>
           <Text style={styles.value}>{visit.food_grams || 0} g</Text>
         </View>
-
         {visit.wet_food_cans !== undefined && visit.wet_food_cans !== null && (
           <View style={styles.card}>
-            <Text style={styles.label}>🥫 Latas de comida húmeda</Text>
+            <Text style={styles.label}>🥫 Wet food cans</Text>
             <Text style={styles.value}>{visit.wet_food_cans}</Text>
           </View>
         )}
-
         {visit.can_size && (
           <View style={styles.card}>
-            <Text style={styles.label}>📦 Tamaño de lata</Text>
-            <Text style={styles.value}>{visit.can_size === 'small' ? 'Pequeña' : 'Grande'}</Text>
+            <Text style={styles.label}>📦 Can size</Text>
+            <Text style={styles.value}>{visit.can_size === 'small' ? 'Small' : 'Large'}</Text>
           </View>
         )}
-
         {visit.notes && (
           <View style={styles.card}>
-            <Text style={styles.label}>📝 Notas</Text>
+            <Text style={styles.label}>📝 Notes</Text>
             <Text style={styles.notesText}>{visit.notes}</Text>
           </View>
         )}
-
         <View style={styles.card}>
-          <Text style={styles.label}>👤 Registrado por</Text>
+          <Text style={styles.label}>👤 Recorded by</Text>
           <Text style={styles.value}>
-            {visit.user
-              ? (visit.user.first_name || visit.user.last_name)
-                ? `${visit.user.first_name ?? ''} ${visit.user.last_name ?? ''}`.trim()
-                : visit.user.email
-              : 'Desconocido'}
+            {visit.user ? (visit.user.first_name || visit.user.last_name) ? `${visit.user.first_name ?? ''} ${visit.user.last_name ?? ''}`.trim() : visit.user.email : 'Unknown'}
           </Text>
-          {visit.user?.first_name || visit.user?.last_name ? (
-            <Text style={styles.subValue}>{visit.user.email}</Text>
-          ) : null}
+          {visit.user?.first_name || visit.user?.last_name ? <Text style={styles.subValue}>{visit.user.email}</Text> : null}
         </View>
       </ScrollView>
     </SafeAreaView>
