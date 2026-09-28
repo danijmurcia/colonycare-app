@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TabParamList, ColoniesStackParamList } from '../navigation/types';
 import { useAuth } from '../context/AuthContext';
 import { coloniesService, Colony } from '../services/coloniesService';
 
 export default function HomeScreen() {
   const { logout } = useAuth();
-  const navigation = useNavigation();
+  type HomeNavProp = CompositeNavigationProp<BottomTabNavigationProp<TabParamList, 'home'>, NativeStackNavigationProp<ColoniesStackParamList>>;
+  const navigation = useNavigation<HomeNavProp>();
   const [colonies, setColonies] = useState<Colony[]>([]);
   const [pending, setPending] = useState<Colony[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +76,7 @@ export default function HomeScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>⚠️ Pendientes de visita</Text>
             {pending.map((c) => (
-              <TouchableOpacity key={c.id} style={styles.pendingCard} onPress={() => navigation.navigate('colonies' as any, { screen: 'colony-detail', params: { colonyId: c.id } } as any)}>
+              <TouchableOpacity key={c.id} style={styles.pendingCard} onPress={() => navigation.navigate('colonies', { screen: 'colony-detail', params: { colonyId: c.id } })}>
                 <Text style={styles.pendingName}>{c.name}</Text>
                 <Text style={styles.pendingDetail}>📍 {c.location} · 🐱 {c.estimated_cats} gatos</Text>
               </TouchableOpacity>
@@ -86,7 +91,7 @@ export default function HomeScreen() {
             </View>
           ) : (
             colonies.map((c) => (
-              <TouchableOpacity key={c.id} style={styles.colonyCard} onPress={() => navigation.navigate('colonies' as any, { screen: 'colony-detail', params: { colonyId: c.id } } as any)}>
+              <TouchableOpacity key={c.id} style={styles.colonyCard} onPress={() => navigation.navigate('colonies', { screen: 'colony-detail', params: { colonyId: c.id } })}>
                 <View style={styles.colonyInfo}>
                   <Text style={styles.colonyName}>{c.name}</Text>
                   <Text style={styles.colonyLocation}>📍 {c.location}</Text>

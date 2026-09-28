@@ -2,13 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
 
 export default function ColoniasScreen() {
   const [colonies, setColonies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
 
   const loadColonies = useCallback(async () => {
     try {
@@ -39,7 +41,7 @@ export default function ColoniasScreen() {
   const renderColony = ({ item }: { item: any }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate('colony-detail' as any, { colonyId: item.id } as any)}
+      onPress={() => navigation.navigate('colony-detail', { colonyId: item.id })}
     >
       <Text style={styles.cardTitle}>{item.name}</Text>
       <Text style={styles.cardText}>📍 {item.location}</Text>

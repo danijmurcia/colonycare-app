@@ -6,10 +6,12 @@ import HomeScreen from '../screens/HomeScreen';
 import ColoniasScreen from '../screens/ColoniasScreen';
 import DetalleColoniaScreen from '../screens/DetalleColoniaScreen';
 import ColoniaCreateScreen from '../screens/ColoniaCreateScreen';
+import NuevaVisitaScreen from '../screens/NuevaVisitaScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import { TabParamList, ColoniesStackParamList } from './types';
 
-const Tab = createBottomTabNavigator();
-const ColoniesStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator<TabParamList>();
+const ColoniesStack = createNativeStackNavigator<ColoniesStackParamList>();
 
 function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
   return <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>{icon}</Text>;
@@ -21,6 +23,7 @@ function ColoniesStackNavigator() {
       <ColoniesStack.Screen name="colonies-list" component={ColoniasScreen} />
       <ColoniesStack.Screen name="colony-detail" component={DetalleColoniaScreen} />
       <ColoniesStack.Screen name="colony-create" component={ColoniaCreateScreen} />
+      <ColoniesStack.Screen name="visit-new" component={NuevaVisitaScreen} />
     </ColoniesStack.Navigator>
   );
 }

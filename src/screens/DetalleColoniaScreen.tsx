@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
 
 export default function DetalleColoniaScreen() {
   const route = useRoute() as any;
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const { colonyId } = route.params || {};
   const [colony, setColony] = useState<any>(null);
   const [visits, setVisits] = useState<any[]>([]);
@@ -68,7 +70,7 @@ export default function DetalleColoniaScreen() {
             <FlatList data={visits} renderItem={({ item }) => <View style={styles.visitItem}><Text style={styles.visitDate}>{new Date(item.date).toLocaleDateString('es-ES')}</Text><Text style={styles.visitDetail}>{item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}</Text></View>} keyExtractor={(item, i) => String(i)} scrollEnabled={false} />
           )}
         </View>
-        <TouchableOpacity style={styles.visitBtn}>
+        <TouchableOpacity style={styles.visitBtn} onPress={() => navigation.navigate('visit-new', { colonyId })}>
           <Text style={styles.visitBtnText}>+ Registrar Visita</Text>
         </TouchableOpacity>
       </ScrollView>
