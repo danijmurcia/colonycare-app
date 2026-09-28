@@ -36,7 +36,7 @@ export default function ColoniasScreen() {
     loadColonies();
   }, [loadColonies]);
 
-  const renderColony = ({ item }: { item: Colony }) => (
+  const renderColony = ({ item }: { item: any }) => (
     <TouchableOpacity
       style={styles.card}
       onPress={() => navigation.navigate('colony-detail' as never, { colonyId: item.id } as never)}
