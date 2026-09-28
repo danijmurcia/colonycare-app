@@ -249,9 +249,9 @@ export default function HomeScreen() {
               <Text style={styles.myResumenTitle}>📊 Mi Resumen</Text>
               <TouchableOpacity
                 onPress={() => setShowStatsInfo(true)}
-                style={styles.infoButton}
+                className="w-8 h-8 rounded-full bg-orange-100 items-center justify-center"
               >
-                <Text style={{ fontSize: 16, fontWeight: '700', color: '#E85D04' }}>i</Text>
+                <Text className="text-orange-500 text-sm font-bold">i</Text>
               </TouchableOpacity>
             </View>
             {/* Fila superior: 3 números */}
@@ -602,12 +602,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   infoButton: {
+    fontSize: 16,
     width: 36,
     height: 36,
     backgroundColor: '#FFF0E8',
     borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: '#E85D04',
   },
   modalOverlay: {
     position: "absolute",
