@@ -30,12 +30,18 @@ export default function NewVisitScreen() {
   const toast = useToast();
   const { colonyId } = route.params || {};
   const [canSize, setCanSize] = useState<'small' | 'large' | null>(null);
+  const [foodGrams, setFoodGrams] = useState<200 | 300 | 500 | 1000 | null>(null);
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
+      if (!foodGrams) {
+        toast.show('Selecciona la cantidad de pienso seco', { type: 'danger', duration: 2000 });
+        setSubmitting(false);
+        return;
+      }
       const response = await coloniesService.createVisit(colonyId, {
         cats_seen: Number(values.cats_seen),
-        food_grams: Number(values.food_grams),
+        food_grams: foodGrams,
         wet_food_cans: values.wet_food_cans ? Number(values.wet_food_cans) : undefined,
         can_size: canSize || undefined,
         notes: values.notes || undefined,
@@ -72,14 +78,20 @@ export default function NewVisitScreen() {
               />
               {touched.cats_seen && errors.cats_seen && <Text style={styles.error}>{String(errors.cats_seen)}</Text>}
               <Text style={styles.label}>Pienso seco (gramos) *</Text>
-              <TextInput
-                style={[styles.input, touched.food_grams && errors.food_grams ? styles.inputError : null]}
-                placeholder="0"
-                keyboardType="number-pad"
-                value={values.food_grams}
-                onChangeText={handleChange('food_grams')}
-              />
-              {touched.food_grams && errors.food_grams && <Text style={styles.error}>{String(errors.food_grams)}</Text>}
+              <View style={styles.toggleRow}>
+                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 200 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 200 ? null : 200)}>
+                  <Text style={[styles.toggleText, foodGrams === 200 && styles.toggleTextActive]}>200g</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 300 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 300 ? null : 300)}>
+                  <Text style={[styles.toggleText, foodGrams === 300 && styles.toggleTextActive]}>300g</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 500 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 500 ? null : 500)}>
+                  <Text style={[styles.toggleText, foodGrams === 500 && styles.toggleTextActive]}>500g</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.toggleBtn, foodGrams === 1000 && styles.toggleActive]} onPress={() => setFoodGrams(foodGrams === 1000 ? null : 1000)}>
+                  <Text style={[styles.toggleText, foodGrams === 1000 && styles.toggleTextActive]}>1kg</Text>
+                </TouchableOpacity>
+              </View>
               <Text style={styles.label}>Latas de comida húmeda (opcional)</Text>
               <TextInput
                 style={[styles.input, touched.wet_food_cans && errors.wet_food_cans ? styles.inputError : null]}
