@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -36,65 +36,65 @@ export default function ColonyDetailScreen() {
     }
   };
 
-  if (loading) return <View style={styles.centerLoader}><ActivityIndicator size="large" color="#E85D04" /></View>;
+  if (loading) return <View className="flex-1 justify-center items-center"><ActivityIndicator size="large" color="#E85D04" /></View>;
 
   if (!colony) return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.headerBtn} onPress={() => navigation.goBack()}>
-        <Text style={styles.backBtn}>← Volver</Text>
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <TouchableOpacity className="p-1" onPress={() => navigation.goBack()}>
+        <Text className="text-base text-[#E85D04] font-bold">← Volver</Text>
       </TouchableOpacity>
-      <Text style={styles.errorText}>No se pudo cargar la colonia</Text>
+      <Text className="text-sm text-gray-400 text-center mt-5">No se pudo cargar la colonia</Text>
     </SafeAreaView>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <View className="flex-row justify-between items-center px-4 py-3">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtn}>← Volver</Text>
+          <Text className="text-base text-[#E85D04] font-bold">← Volver</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{colony.name}</Text>
+        <Text className="text-lg font-black text-[#1A1A2E] flex-1 text-center">{colony.name}</Text>
         <View />
       </View>
-      <ScrollView style={styles.content}>
-        <View style={styles.infoCard}>
-          <Text style={styles.label}>📍 Localizacion</Text>
-          <Text style={styles.value}>{colony.location}</Text>
+      <ScrollView className="flex-1 px-4 py-3">
+        <View className="bg-white rounded-xl p-4 mb-3">
+          <Text className="text-sm text-gray-400 font-semibold mb-1">📍 Localizacion</Text>
+          <Text className="text-base font-bold text-[#1A1A2E]">{colony.location}</Text>
         </View>
-        <View style={styles.infoCard}>
-          <Text style={styles.label}>🐱 Gatos estimados</Text>
-          <Text style={styles.value}>{colony.estimated_cats || 0}</Text>
+        <View className="bg-white rounded-xl p-4 mb-3">
+          <Text className="text-sm text-gray-400 font-semibold mb-1">🐱 Gatos estimados</Text>
+          <Text className="text-base font-bold text-[#1A1A2E]">{colony.estimated_cats || 0}</Text>
         </View>
-        <View style={styles.buttonsRow}>
-          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('colony-edit', { colonyId })}>
-            <Text style={styles.editBtnText}>✎ Editar colonia</Text>
+        <View className="flex-row gap-3 mb-8">
+          <TouchableOpacity className="flex-1 bg-orange-400 rounded-xl py-3 items-center" onPress={() => navigation.navigate('colony-edit', { colonyId })}>
+            <Text className="text-white text-sm font-bold">✎ Editar colonia</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.visitBtn} onPress={() => navigation.navigate('visit-new', { colonyId })}>
-            <Text style={styles.visitBtnText}>+ Registrar visita</Text>
+          <TouchableOpacity className="flex-1 bg-[#E85D04] rounded-xl py-3 items-center" onPress={() => navigation.navigate('visit-new', { colonyId })}>
+            <Text className="text-white text-sm font-bold">+ Registrar visita</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📋 Historial de visitas ({visits.length})</Text>
+        <View className="mb-5">
+          <Text className="text-base font-bold text-[#1A1A2E] mb-3">📋 Historial de visitas ({visits.length})</Text>
           {visits.length === 0 ? (
-            <Text style={styles.noVisits}>Sin visitas registradas</Text>
+            <Text className="text-sm text-gray-400 italic">Sin visitas registradas</Text>
           ) : (
             <FlatList
               data={visits}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={styles.visitItem}
+                  className="bg-white rounded-lg p-3 mb-2"
                   onPress={() => navigation.navigate('visit-detail', { visit: item })}
                 >
-                  <View style={styles.visitRow}>
-                    <View style={styles.visitLeft}>
-                      <Text style={styles.visitDate}>
+                  <View className="flex-row justify-between items-start">
+                    <View className="flex-1">
+                      <Text className="text-sm font-bold text-[#E85D04]">
                         {new Date(item.date).toLocaleDateString('es-ES')}
                       </Text>
-                      <Text style={styles.visitDetail}>
+                      <Text className="text-xs text-gray-500 mt-1">
                         {item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}
                       </Text>
                     </View>
-                    <Text style={styles.visitUser}>
+                    <Text className="text-xs font-semibold text-gray-400 text-right w-2/5">
                       {item.user?.first_name} {item.user?.last_name}
                     </Text>
                   </View>
@@ -109,31 +109,3 @@ export default function ColonyDetailScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F9FA' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12 },
-  headerBtn: { padding: 4 },
-  backBtn: { fontSize: 16, color: '#E85D04', fontWeight: '700' },
-  title: { fontSize: 18, fontWeight: '800', color: '#1A1A2E', flex: 1, textAlign: 'center' },
-  content: { flex: 1, paddingHorizontal: 16, paddingVertical: 12 },
-  infoCard: { backgroundColor: '#FFF', borderRadius: 12, padding: 16, marginBottom: 12 },
-  label: { fontSize: 13, color: '#999', fontWeight: '600', marginBottom: 4 },
-  value: { fontSize: 16, fontWeight: '700', color: '#1A1A2E' },
-  section: { marginBottom: 20 },
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: '#1A1A2E', marginBottom: 12 },
-  noVisits: { fontSize: 13, color: '#999', fontStyle: 'italic' },
-  visitItem: { backgroundColor: '#FFF', borderRadius: 8, padding: 12, marginBottom: 8 },
-  visitRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  visitLeft: { flex: 1 },
-  visitDate: { fontSize: 13, fontWeight: '700', color: '#E85D04' },
-  visitDetail: { fontSize: 12, color: '#666', marginTop: 4 },
-  visitUser: { fontSize: 12, fontWeight: '600', color: '#999', textAlign: 'right', maxWidth: '40%' },
-  buttonsRow: { flexDirection: 'row', gap: 12, marginBottom: 30 },
-  editBtn: { flex: 1, backgroundColor: '#FF9500', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
-  editBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700' },
-  visitBtn: { flex: 1, backgroundColor: '#E85D04', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
-  visitBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700' },
-  centerLoader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  errorText: { fontSize: 14, color: '#999', textAlign: 'center', marginTop: 20 },
-});
