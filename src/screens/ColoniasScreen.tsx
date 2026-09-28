@@ -4,10 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { coloniesService } from '../services/coloniesService';
 
-interface Colony { id: string; name: string; location: string; estimated_cats?: number; }
-
 export default function ColoniasScreen() {
-  const [colonies, setColonies] = useState<Colony[]>([]);
+  const [colonies, setColonies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
