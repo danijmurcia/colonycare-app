@@ -247,8 +247,11 @@ export default function HomeScreen() {
           <View style={styles.myResumenCard}>
             <View style={styles.myResumenTitleRow}>
               <Text style={styles.myResumenTitle}>📊 Mi Resumen</Text>
-              <TouchableOpacity onPress={() => setShowStatsInfo(true)}>
-                <Text style={styles.infoButton}>ℹ️</Text>
+              <TouchableOpacity
+                onPress={() => setShowStatsInfo(true)}
+                className="w-8 h-8 rounded-full bg-orange-100 items-center justify-center"
+              >
+                <Text className="text-orange-500 text-sm font-bold">i</Text>
               </TouchableOpacity>
             </View>
             {/* Fila superior: 3 números */}
