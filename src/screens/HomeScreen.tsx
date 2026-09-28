@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
 import { coloniesService, Colony } from '../services/coloniesService';
 
 export default function HomeScreen() {
   const { logout } = useAuth();
+  const navigation = useNavigation();
   const [colonies, setColonies] = useState<Colony[]>([]);
   const [pending, setPending] = useState<Colony[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,10 +71,10 @@ export default function HomeScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>⚠️ Pendientes de visita</Text>
             {pending.map((c) => (
-              <View key={c.id} style={styles.pendingCard}>
+              <TouchableOpacity key={c.id} style={styles.pendingCard} onPress={() => navigation.navigate('colonies' as never, { screen: 'colony-detail', params: { colonyId: c.id } } as never)}>
                 <Text style={styles.pendingName}>{c.name}</Text>
                 <Text style={styles.pendingDetail}>📍 {c.location} · 🐱 {c.estimated_cats} gatos</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         )}
@@ -84,7 +86,7 @@ export default function HomeScreen() {
             </View>
           ) : (
             colonies.map((c) => (
-              <View key={c.id} style={styles.colonyCard}>
+              <TouchableOpacity key={c.id} style={styles.colonyCard} onPress={() => navigation.navigate('colonies' as never, { screen: 'colony-detail', params: { colonyId: c.id } } as never)}>
                 <View style={styles.colonyInfo}>
                   <Text style={styles.colonyName}>{c.name}</Text>
                   <Text style={styles.colonyLocation}>📍 {c.location}</Text>
@@ -92,7 +94,7 @@ export default function HomeScreen() {
                 <View style={styles.colonyBadge}>
                   <Text style={styles.colonyBadgeText}>{c.estimated_cats} 🐱</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))
           )}
         </View>
