@@ -4,12 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
+import { useToast } from 'react-native-toast-notifications';
 import { coloniesService } from '../services/coloniesService';
+import { getErrorMessage } from '../utils/errorHandler';
 import type { Colony, Visit } from '../types';
 
 export default function ColonyDetailScreen() {
   const route = useRoute<RouteProp<ColoniesStackParamList, 'colony-detail'>>();
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
+  const toast = useToast();
   const { colonyId } = route.params;
   const [colony, setColony] = useState<Colony | null>(null);
   const [visits, setVisits] = useState<Visit[]>([]);
@@ -31,7 +34,7 @@ export default function ColonyDetailScreen() {
       setColony(colonyData);
       setVisits(visitsData || []);
     } catch (error) {
-      console.error('Error loading colony:', error);
+      toast.show(getErrorMessage(error, 'Error al cargar colonia'), { type: 'danger', duration: 2000 });
     } finally {
       setLoading(false);
     }

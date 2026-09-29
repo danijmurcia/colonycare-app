@@ -14,7 +14,9 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabParamList, ColoniesStackParamList } from "../navigation/types";
 import LogoutButton from "../components/LogoutButton";
+import { useToast } from 'react-native-toast-notifications';
 import { coloniesService, Colony } from "../services/coloniesService";
+import { getErrorMessage } from '../utils/errorHandler';
 import { useUserStats } from "../hooks/useUserStats";
 import { usePendingColonies } from "../hooks/usePendingColonies";
 
@@ -24,6 +26,7 @@ export default function HomeScreen() {
     NativeStackNavigationProp<ColoniesStackParamList>
   >;
   const navigation = useNavigation<HomeNavProp>();
+  const toast = useToast();
   const [colonies, setColonies] = useState<Colony[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -45,7 +48,7 @@ export default function HomeScreen() {
       setColonies(allColonies);
       await fetchDaily();
     } catch (e) {
-      console.error("Error cargando datos:", e);
+      toast.show(getErrorMessage(e, 'Error al cargar datos'), { type: 'danger', duration: 2000 });
     } finally {
       setLoading(false);
       setRefreshing(false);

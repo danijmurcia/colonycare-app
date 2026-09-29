@@ -7,6 +7,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { coloniesService } from '../services/coloniesService';
+import { getErrorMessage } from '../utils/errorHandler';
 import { ColoniesStackParamList } from '../navigation/types';
 
 const validationSchema = Yup.object().shape({
@@ -46,8 +47,8 @@ export default function NewVisitScreen() {
       });
       toast.show(response.message, { type: 'success', duration: 2000 });
       navigation.goBack();
-    } catch (error: any) {
-      toast.show(error.response?.data?.message || 'Error al registrar la visita', { type: 'danger', duration: 2000 });
+    } catch (error) {
+      toast.show(getErrorMessage(error, 'Error al registrar la visita'), { type: 'danger', duration: 2000 });
     } finally {
       setSubmitting(false);
     }

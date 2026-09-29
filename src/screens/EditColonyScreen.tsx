@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { useToast } from 'react-native-toast-notifications';
 import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
+import { getErrorMessage } from '../utils/errorHandler';
 import type { Colony } from '../types';
 
 const validationSchema = Yup.object().shape({
@@ -34,7 +35,7 @@ export default function EditColonyScreen() {
       const data = await coloniesService.getById(colonyId);
       setColony(data);
     } catch (error) {
-      toast.show('Error al cargar colonia', { type: 'danger', duration: 2000 });
+      toast.show(getErrorMessage(error, 'Error al cargar colonia'), { type: 'danger', duration: 2000 });
     } finally {
       setLoading(false);
     }
@@ -45,10 +46,9 @@ export default function EditColonyScreen() {
     try {
       await coloniesService.update(colonyId, { name: values.name, location: values.location, estimated_cats: parseInt(values.estimated_cats) });
       toast.show('Colonia actualizada correctamente', { type: 'success', duration: 2000 });
-      setTimeout(() => navigation.goBack(), 500);
-    } catch (error: any) {
-      const msg = error?.response?.data?.message || 'Error al actualizar colonia';
-      toast.show(msg, { type: 'danger', duration: 2000 });
+      navigation.goBack();
+    } catch (error) {
+      toast.show(getErrorMessage(error, 'Error al actualizar colonia'), { type: 'danger', duration: 2000 });
     } finally {
       setSubmitting(false);
     }

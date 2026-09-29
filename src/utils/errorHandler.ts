@@ -1,0 +1,1 @@
+import { AxiosError } from "axios"; import type { ApiResponse } from "../types"; export const getErrorMessage = (error: unknown, fallback = "Error inesperado"): string => { const axiosError = error as AxiosError<ApiResponse<null>>; return axiosError?.response?.data?.message ?? fallback; };
