@@ -38,7 +38,6 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
     try {
       const response = await authService.login(values.email, values.password);
       await login(response.data.access_token);
-      toast.show(response.message, { type: "success", duration: 2000 });
     } catch (error: any) {
       const errorMsg = error.response?.data?.message || error.message || "Error en el login";
       toast.show(errorMsg, { type: "danger", duration: 2000 });
