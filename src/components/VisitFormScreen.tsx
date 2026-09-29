@@ -74,8 +74,3 @@ export default function VisitFormScreen({ title, initialValues, onSubmit, submit
   );
 }
 
-interface ViewProps { children?: React.ReactNode; className?: string; }
-function View(props: ViewProps) {
-  const { View: RNView } = require('react-native');
-  return <RNView {...props} />;
-}
