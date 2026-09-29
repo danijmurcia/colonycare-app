@@ -1,32 +1,66 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View, Text, TouchableOpacity, ScrollView, ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useToast } from 'react-native-toast-notifications';
 import { ColoniesStackParamList } from '../navigation/types';
+import { visitService } from '../services/visitService';
+import { useAuth } from '../context/AuthContext';
+import { getErrorMessage } from '../utils/errorHandler';
+import DeleteVisitModal from '../components/DeleteVisitModal';
 import type { Visit } from '../types';
 
 export default function VisitDetailScreen() {
   const route = useRoute<RouteProp<ColoniesStackParamList, 'visit-detail'>>();
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
+  const toast = useToast();
+  const { user } = useAuth();
+  const [deleting, setDeleting] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const visit: Visit = route.params.visit;
 
-  if (!visit) return (
-    <SafeAreaView className="flex-1 bg-[#F5F5F5]">
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text className="text-base text-[#E85D04] font-bold mx-4 my-3">← Volver</Text>
-      </TouchableOpacity>
-      <Text className="text-sm text-[#999] text-center mt-5">No se pudo cargar la visita</Text>
-    </SafeAreaView>
-  );
+  if (!visit) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#F5F5F5]">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text className="text-base text-[#E85D04] font-bold mx-4 my-3">← Volver</Text>
+        </TouchableOpacity>
+        <Text className="text-sm text-[#999] text-center mt-5">No se pudo cargar la visita</Text>
+      </SafeAreaView>
+    );
+  }
 
-  const fecha = new Date(visit.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const hora = new Date(visit.date).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-  const userName = visit.user
-    ? (visit.user.first_name || visit.user.last_name)
-      ? `${visit.user.first_name ?? ''} ${visit.user.last_name ?? ''}`.trim()
-      : visit.user.email
-    : 'Desconocido';
+  // Solo el autor o superuser pueden eliminar
+  const isOwner = visit.user_id != null && user?.id === visit.user_id;
+  const canDelete = !!user && (user.is_superuser || isOwner);
+
+  const handleDeleteConfirm = async () => {
+    try {
+      setDeleting(true);
+      setDeleteModalVisible(false);
+      await visitService.delete(visit.colony_id, visit.id);
+      toast.show('Visita eliminada correctamente', { type: 'success', duration: 2000 });
+      navigation.goBack();
+    } catch (error) {
+      toast.show(getErrorMessage(error, 'Error al eliminar la visita'), { type: 'danger', duration: 2000 });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const fecha = new Date(visit.date).toLocaleDateString('es-ES', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  });
+  const hora = new Date(visit.date).toLocaleTimeString('es-ES', {
+    hour: '2-digit', minute: '2-digit',
+  });
+  const firstName = visit.user?.first_name ?? '';
+  const lastName = visit.user?.last_name ?? '';
+  const fullName = (firstName + ' ' + lastName).trim();
+  const userName = visit.user ? (fullName || visit.user.email) : 'Desconocido';
 
   return (
     <SafeAreaView className="flex-1 bg-[#F5F5F5]">
@@ -52,9 +86,9 @@ export default function VisitDetailScreen() {
           <Text className="text-3xl font-black text-[#E85D04]">{visit.food_grams || 0} g</Text>
         </View>
 
-        {visit.wet_food_cans !== undefined && visit.wet_food_cans !== null && (
+        {visit.wet_food_cans != null && (
           <View className="bg-white rounded-2xl p-5 mb-3 border border-[#F0F0F0]">
-            <Text className="text-xs text-[#999] font-semibold mb-2">🥫 Latas de comida húmeda</Text>
+            <Text className="text-xs text-[#999] font-semibold mb-2">🧫 Latas de comida húmeda</Text>
             <Text className="text-3xl font-black text-[#E85D04]">{visit.wet_food_cans}</Text>
           </View>
         )}
@@ -62,18 +96,43 @@ export default function VisitDetailScreen() {
         <View className="bg-white rounded-2xl p-5 mb-3 border border-[#F0F0F0]">
           <Text className="text-xs text-[#999] font-semibold mb-2">👤 Registrado por</Text>
           <Text className="text-base font-bold text-[#1A1A2E]">{userName}</Text>
-          {visit.user?.first_name || visit.user?.last_name ? (
-            <Text className="text-xs text-[#999] mt-1">{visit.user.email}</Text>
-          ) : null}
+          {(visit.user?.first_name || visit.user?.last_name) && (
+            <Text className="text-xs text-[#999] mt-1">{visit.user?.email}</Text>
+          )}
+          {visit.user?.phone && (
+            <Text className="text-xs text-[#999] mt-1">☎️ {visit.user.phone}</Text>
+          )}
         </View>
 
         {visit.notes && (
-          <View className="bg-white rounded-2xl p-5 mb-7 border border-[#F0F0F0]">
+          <View className="bg-white rounded-2xl p-5 mb-3 border border-[#F0F0F0]">
             <Text className="text-xs text-[#999] font-semibold mb-2">📝 Notas</Text>
             <Text className="text-sm text-[#666]" style={{ lineHeight: 22 }}>{visit.notes}</Text>
           </View>
         )}
+
+        {canDelete && (
+          <TouchableOpacity
+            className={`bg-red-600 rounded-2xl py-4 items-center mb-8${deleting ? ' opacity-60' : ''}`}
+            onPress={() => setDeleteModalVisible(true)}
+            disabled={deleting}
+          >
+            {deleting
+              ? <ActivityIndicator color="#FFF" />
+              : <Text className="text-white text-base font-bold">🗑 Eliminar visita</Text>
+            }
+          </TouchableOpacity>
+        )}
       </ScrollView>
+
+      <DeleteVisitModal
+        visible={deleteModalVisible}
+        visitDate={fecha}
+        deleting={deleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
+

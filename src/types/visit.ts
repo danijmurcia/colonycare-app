@@ -3,6 +3,7 @@ export interface VisitUser {
   email: string;
   first_name?: string;
   last_name?: string;
+  phone?: string;
 }
 
 export interface Visit {
@@ -22,4 +23,11 @@ export interface VisitRequest {
   food_grams: number;
   wet_food_cans?: number;
   notes?: string;
+}
+
+export interface UserStats {
+  total_visits: number;
+  total_colonies: number;
+  most_visited: { name: string; count: number } | null;
+  last_visit: { date: string; colony: string } | null;
 }
