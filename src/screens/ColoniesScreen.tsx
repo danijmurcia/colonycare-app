@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View, Text, FlatList, TouchableOpacity,
-  RefreshControl, ActivityIndicator, PanResponder, Animated, Alert,
+  RefreshControl, ActivityIndicator, PanResponder, Animated,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -10,6 +10,7 @@ import { ColoniesStackParamList } from "../navigation/types";
 import { coloniesService, Colony } from "../services/coloniesService";
 import { useToast } from "react-native-toast-notifications";
 import { usePermissions } from "../hooks/usePermissions";
+import DeleteColonyModal from "../components/DeleteColonyModal";
 
 const SWIPE_THRESHOLD = 60;
 const DELETE_BTN_WIDTH = 80;
@@ -61,6 +62,8 @@ export default function ColoniesScreen() {
   const [colonies, setColonies] = useState<Colony[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
   const { canDeleteColony } = usePermissions();
@@ -88,20 +91,24 @@ export default function ColoniesScreen() {
   }, []);
 
   const handleDelete = useCallback((id: number, name: string) => {
-    Alert.alert("Eliminar colonia", `¿Seguro que quieres eliminar "${name}"?`, [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Eliminar", style: "destructive", onPress: async () => {
-        try {
-          const message = await coloniesService.delete(id);
-          setColonies((prev) => prev.filter((c) => c.id !== id));
-          toast.show(message || "Colonia eliminada correctamente", { type: "success", duration: 2000 });
-        } catch (error: any) {
-          const msg = error?.response?.data?.message || "No se pudo eliminar la colonia";
-          toast.show(msg, { type: "danger", duration: 2000 });
-        }
-      }},
-    ]);
-  }, [toast]);
+    setDeleteTarget({ id, name });
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const message = await coloniesService.delete(deleteTarget.id);
+      setColonies((prev) => prev.filter((c) => c.id !== deleteTarget.id));
+      toast.show(message || "Colonia eliminada correctamente", { type: "success", duration: 2000 });
+      setDeleteTarget(null);
+    } catch (error: any) {
+      const msg = error?.response?.data?.message || "No se pudo eliminar la colonia";
+      toast.show(msg, { type: "danger", duration: 2000 });
+    } finally {
+      setDeleting(false);
+    }
+  }, [deleteTarget, toast]);
 
   useEffect(() => { loadColonies(); }, [loadColonies]);
   useFocusEffect(React.useCallback(() => { loadColonies(); }, [loadColonies]));
@@ -134,6 +141,14 @@ export default function ColoniesScreen() {
           )}
         />
       )}
+
+      <DeleteColonyModal
+        visible={deleteTarget !== null}
+        colonyName={deleteTarget?.name ?? ''}
+        deleting={deleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </SafeAreaView>
   );
 }
