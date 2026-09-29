@@ -97,7 +97,7 @@ export default function VisitDetailScreen() {
           <Text className="text-xs text-[#999] font-semibold mb-2">👤 Registrado por</Text>
           <Text className="text-base font-bold text-[#1A1A2E]">{userName}</Text>
           {visit.user?.phone && (
-            <Text className="text-lg font-semibold text-[#1A1A2E] mt-2">{visit.user.phone}</Text>
+            <Text className="text-sm font-semibold text-[#1A1A2E] mt-1">{visit.user.phone}</Text>
           )}
         </View>
 
