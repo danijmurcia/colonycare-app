@@ -3,7 +3,8 @@ export interface Colony {
   name: string;
   location: string;
   estimated_cats: number;
+  deleted_at?: string | null;
 }
 
-export type ColonyCreateRequest = Omit<Colony, 'id'>;
+export type ColonyCreateRequest = Omit<Colony, 'id' | 'deleted_at'>;
 export type ColonyUpdateRequest = Partial<ColonyCreateRequest>;
