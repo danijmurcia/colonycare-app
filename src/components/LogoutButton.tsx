@@ -16,7 +16,6 @@ export default function LogoutButton({ variant = 'footer' }: LogoutButtonProps) 
     setVisible(false);
     try {
       await logout();
-      toast.show('Sesión cerrada correctamente', { type: 'success', duration: 2000 });
     } catch {
       toast.show('Error al cerrar sesión', { type: 'danger', duration: 2000 });
     }
