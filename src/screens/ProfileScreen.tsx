@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert,
   TextInput,
   ScrollView,
   ActivityIndicator,
@@ -12,22 +11,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
 import { useAuth } from "../context/AuthContext";
 import { authService } from "../services/authService";
+import LogoutButton from "../components/LogoutButton";
 
 export default function ProfileScreen() {
-  const { user, logout, refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const toast = useToast();
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [firstName, setFirstName] = useState(user?.first_name || "");
   const [lastName, setLastName] = useState(user?.last_name || "");
   const [phone, setPhone] = useState(user?.phone || "");
 
-  const handleLogout = () => {
-    Alert.alert("Cerrar sesion", "Seguro que quieres cerrar sesion?", [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Cerrar sesion", style: "destructive", onPress: logout },
-    ]);
-  };
 
   const handleEdit = () => {
     setFirstName(user?.first_name || "");
@@ -60,7 +55,6 @@ export default function ProfileScreen() {
     }
   };
   return (
-  return (
     <SafeAreaView className="flex-1 bg-slate-50">
       <ScrollView className="pb-5">
         <Text className="text-2xl font-black text-[#1A1A2E] px-4 py-3">Mi Perfil</Text>
@@ -88,7 +82,7 @@ export default function ProfileScreen() {
           </View>
         )}
       </ScrollView>
-      <TouchableOpacity className="bg-red-600 rounded-lg py-3.5 mx-4 mb-5 items-center" onPress={handleLogout}><Text className="text-white text-base font-bold">🚪 Cerrar sesión</Text></TouchableOpacity>
+      <LogoutButton variant="footer" />
     </SafeAreaView>
   );
 }

@@ -13,13 +13,12 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabParamList, ColoniesStackParamList } from "../navigation/types";
-import { useAuth } from "../context/AuthContext";
+import LogoutButton from "../components/LogoutButton";
 import { coloniesService, Colony } from "../services/coloniesService";
 import { useUserStats } from "../hooks/useUserStats";
 import { usePendingColonies } from "../hooks/usePendingColonies";
 
 export default function HomeScreen() {
-  const { logout } = useAuth();
   type HomeNavProp = CompositeNavigationProp<
     BottomTabNavigationProp<TabParamList, "home">,
     NativeStackNavigationProp<ColoniesStackParamList>
@@ -98,7 +97,7 @@ export default function HomeScreen() {
         }
       >
         {/* HEADER MEJORADO */}
-        <View className="bg-orange-50 px-6 py-4 flex-row justify-between items-start">
+        <View className="bg-orange-50 px-6 py-4 flex-row justify-between items-start" pointerEvents="box-none">
           <View>
             <Text className="text-2xl font-bold text-orange-600 mb-1">
               🐱 ColonyCare
@@ -114,14 +113,7 @@ export default function HomeScreen() {
               })}
             </Text>
           </View>
-          <TouchableOpacity
-            className="bg-orange-600 rounded-lg px-3 py-1.5 items-center justify-center"
-            onPress={logout}
-          >
-            <Text className="text-white text-xs font-bold">
-              🚪 Cerrar sesión
-            </Text>
-          </TouchableOpacity>
+          <LogoutButton variant="header" />
         </View>
 
         {/* STATS PRINCIPALES */}
