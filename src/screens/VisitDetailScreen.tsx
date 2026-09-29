@@ -96,11 +96,8 @@ export default function VisitDetailScreen() {
         <View className="bg-white rounded-2xl p-5 mb-3 border border-[#F0F0F0]">
           <Text className="text-xs text-[#999] font-semibold mb-2">👤 Registrado por</Text>
           <Text className="text-base font-bold text-[#1A1A2E]">{userName}</Text>
-          {(visit.user?.first_name || visit.user?.last_name) && (
-            <Text className="text-xs text-[#999] mt-1">{visit.user?.email}</Text>
-          )}
           {visit.user?.phone && (
-            <Text className="text-xs text-[#999] mt-1">{visit.user.phone}</Text>
+            <Text className="text-lg font-semibold text-[#1A1A2E] mt-2">{visit.user.phone}</Text>
           )}
         </View>
 
