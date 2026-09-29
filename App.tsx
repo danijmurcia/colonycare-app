@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-// import './global.css'; // NativeWind inyecta CSS automáticamente
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ToastProvider } from 'react-native-toast-notifications';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthProvider, useAuth } from './src/context/AuthContext';
-import LoginScreen from './src/screens/LoginScreen';
-import RegisterScreen from './src/screens/RegisterScreen';
-import MainNavigator from './src/navigation/MainNavigator';
+import React, { useState } from "react";
+import "./global.css"; // NativeWind inyecta CSS automáticamente
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ToastProvider } from "react-native-toast-notifications";
+import { NavigationContainer } from "@react-navigation/native";
+import { AuthProvider, useAuth } from "./src/context/AuthContext";
+import LoginScreen from "./src/screens/LoginScreen";
+import RegisterScreen from "./src/screens/RegisterScreen";
+import MainNavigator from "./src/navigation/MainNavigator";
 
-type Screen = 'login' | 'register';
+type Screen = "login" | "register";
 
 function AppNavigator() {
   const { token, isLoading } = useAuth();
-  const [screen, setScreen] = useState<Screen>('login');
+  const [screen, setScreen] = useState<Screen>("login");
 
   if (isLoading) return null;
 
@@ -21,14 +21,12 @@ function AppNavigator() {
     return <MainNavigator />;
   }
 
-  return screen === 'login' ? (
-    <LoginScreen
-      onGoToRegister={() => setScreen('register')}
-    />
+  return screen === "login" ? (
+    <LoginScreen onGoToRegister={() => setScreen("register")} />
   ) : (
     <RegisterScreen
-      onRegisterSuccess={() => setScreen('login')}
-      onGoToLogin={() => setScreen('login')}
+      onRegisterSuccess={() => setScreen("login")}
+      onGoToLogin={() => setScreen("login")}
     />
   );
 }

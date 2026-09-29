@@ -11,5 +11,6 @@ export type {
   VisitUser,
   Visit,
   VisitRequest,
+  UserStats,
 } from './visit';
 export type { ColoniesStackParamList, TabParamList } from './navigation';

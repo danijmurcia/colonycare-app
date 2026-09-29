@@ -1,7 +1,7 @@
 import httpManager from "./HttpManager";
-import type { ApiResponse, Colony, ColonyCreateRequest, ColonyUpdateRequest, Visit, VisitRequest } from '../types';
+import type { ApiResponse, Colony, ColonyCreateRequest, ColonyUpdateRequest } from '../types';
 
-export type { Colony, Visit, VisitRequest };
+export type { Colony };
 
 export const coloniesService = {
   getAll: async (): Promise<Colony[]> => {
@@ -34,15 +34,5 @@ export const coloniesService = {
   delete: async (id: number): Promise<string> => {
     const response = await httpManager.delete<ApiResponse<null>>('/colonies/' + id);
     return response.data.message;
-  },
-
-  getVisits: async (colonyId: number): Promise<Visit[]> => {
-    const response = await httpManager.get<ApiResponse<Visit[]>>('/colonies/' + colonyId + '/visits');
-    return response.data.data;
-  },
-
-  createVisit: async (colonyId: number, data: VisitRequest): Promise<ApiResponse<Visit>> => {
-    const response = await httpManager.post<ApiResponse<Visit>>('/colonies/' + colonyId + '/visits', data);
-    return response.data;
   },
 };

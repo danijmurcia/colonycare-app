@@ -16,11 +16,11 @@ export default function EditVisitScreen() {
   const toast = useToast();
   const { colonyId, visit } = route.params;
 
-  const handleSubmit = async (data: VisitRequest) => {
+  const handleSubmit = async (visitData: VisitRequest) => {
     try {
-      await visitService.update(colonyId, visit.id, data);
+      const response = await visitService.update(colonyId, visit.id, visitData);
       toast.show('Visita actualizada correctamente', { type: 'success', duration: 2000 });
-      navigation.goBack();
+      navigation.navigate('visit-detail', { colonyId, visit: response });
     } catch (error) {
       toast.show(getErrorMessage(error, 'Error al actualizar la visita'), { type: 'danger', duration: 2000 });
     }

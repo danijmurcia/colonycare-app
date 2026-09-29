@@ -46,7 +46,7 @@ export default function HomeScreen() {
     try {
       const allColonies = await coloniesService.getAll();
       setColonies(allColonies);
-      await fetchDaily();
+      await Promise.all([fetchDaily(), fetchOverdue()]);
     } catch (e) {
       toast.show(getErrorMessage(e, 'Error al cargar datos'), { type: 'danger', duration: 2000 });
     } finally {

@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
 import { useToast } from 'react-native-toast-notifications';
 import { coloniesService } from '../services/coloniesService';
+import { visitService } from '../services/visitService';
 import { getErrorMessage } from '../utils/errorHandler';
 import { usePermissions } from '../hooks/usePermissions';
 import DeleteColonyModal from '../components/DeleteColonyModal';
@@ -48,7 +49,7 @@ export default function ColonyDetailScreen() {
     try {
       const [colonyData, visitsData] = await Promise.all([
         coloniesService.getById(colonyId),
-        coloniesService.getVisits(colonyId),
+        visitService.getByColony(colonyId),
       ]);
       setColony(colonyData);
       setVisits(visitsData || []);

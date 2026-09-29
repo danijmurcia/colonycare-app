@@ -33,8 +33,9 @@ export default function VisitDetailScreen() {
     );
   }
 
-  // Solo el autor o superuser pueden eliminar
+  // Solo el autor o superuser pueden editar/eliminar
   const isOwner = visit.user_id != null && user?.id === visit.user_id;
+  const canEdit = !!user && (user.is_superuser || isOwner);
   const canDelete = !!user && (user.is_superuser || isOwner);
 
   const handleDeleteConfirm = async () => {
@@ -108,7 +109,7 @@ export default function VisitDetailScreen() {
           </View>
         )}
 
-        {isOwner && (
+        {canEdit && (
           <TouchableOpacity
             className="bg-[#E85D04] rounded-2xl py-4 items-center mb-3"
             onPress={() => navigation.navigate('visit-edit', { colonyId: visit.colony_id, visit })}
