@@ -16,7 +16,7 @@ export default function EditVisitScreen() {
   const toast = useToast();
   const { colonyId, visit } = route.params;
 
-  const handleSubmit = async ( VisitRequest) => {
+  const handleSubmit = async (data: VisitRequest) => {
     try {
       await visitService.update(colonyId, visit.id, data);
       toast.show('Visita actualizada correctamente', { type: 'success', duration: 2000 });
