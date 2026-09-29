@@ -66,7 +66,7 @@ export default function ColoniesScreen() {
   const [deleting, setDeleting] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
-  const { canDeleteColony } = usePermissions();
+  const { canDeleteColony, canCreateColony } = usePermissions();
 
   const loadColonies = useCallback(async () => {
     try {
@@ -120,9 +120,11 @@ export default function ColoniesScreen() {
     <SafeAreaView className="flex-1 bg-slate-50">
       <View className="flex-row justify-between items-center px-4 py-3">
         <Text className="text-2xl font-black text-[#1A1A2E]">Colonias</Text>
-        <TouchableOpacity className="bg-[#E85D04] rounded-lg px-3 py-2" onPress={() => navigation.navigate("colony-create" as never)}>
-          <Text className="text-white font-bold text-sm">Crear colonia</Text>
-        </TouchableOpacity>
+        {canCreateColony && (
+          <TouchableOpacity className="bg-[#E85D04] rounded-lg px-3 py-2" onPress={() => navigation.navigate("colony-create" as never)}>
+            <Text className="text-white font-bold text-sm">Crear colonia</Text>
+          </TouchableOpacity>
+        )}
       </View>
       {colonies.length === 0 ? (
         <View className="flex-1 justify-center items-center">
