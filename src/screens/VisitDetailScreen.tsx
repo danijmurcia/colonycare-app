@@ -108,6 +108,14 @@ export default function VisitDetailScreen() {
           </View>
         )}
 
+        {isOwner && (
+          <TouchableOpacity
+            className="bg-[#E85D04] rounded-2xl py-4 items-center mb-3"
+            onPress={() => navigation.navigate('visit-edit', { colonyId: visit.colony_id, visit })}
+          >
+            <Text className="text-white text-base font-bold">✏️ Editar visita</Text>
+          </TouchableOpacity>
+        )}
         {canDelete && (
           <TouchableOpacity
             className={`bg-red-600 rounded-2xl py-4 items-center mb-8${deleting ? ' opacity-60' : ''}`}

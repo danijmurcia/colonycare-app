@@ -8,6 +8,7 @@ import ColoniesScreen from '../screens/ColoniesScreen';
 import ColonyDetailScreen from '../screens/ColonyDetailScreen';
 import EditColonyScreen from '../screens/EditColonyScreen';
 import VisitDetailScreen from '../screens/VisitDetailScreen';
+import EditVisitScreen from '../screens/EditVisitScreen';
 import ColonyCreateScreen from '../screens/ColonyCreateScreen';
 import NewVisitScreen from '../screens/NewVisitScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -33,6 +34,7 @@ function ColoniesStackNavigator() {
         <ColoniesStack.Screen name="colony-create" component={ColonyCreateScreen} />
         <ColoniesStack.Screen name="visit-new" component={NewVisitScreen} />
         <ColoniesStack.Screen name="visit-detail" component={VisitDetailScreen} />
+        <ColoniesStack.Screen name="visit-edit" component={EditVisitScreen} />
       </ColoniesStack.Group>
     </ColoniesStack.Navigator>
   );

@@ -8,6 +8,7 @@ export type ColoniesStackParamList = {
   'colony-edit': { colonyId: number };
   'visit-new': { colonyId: number; colonyName?: string };
   'visit-detail': { visit: Visit };
+  'visit-edit': { colonyId: number; visit: Visit };
 };
 
 export type TabParamList = {
