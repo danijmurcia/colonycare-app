@@ -100,7 +100,7 @@ export default function VisitDetailScreen() {
             <Text className="text-xs text-[#999] mt-1">{visit.user?.email}</Text>
           )}
           {visit.user?.phone && (
-            <Text className="text-xs text-[#999] mt-1">📱 {visit.user.phone}</Text>
+            <Text className="text-xs text-[#999] mt-1">{visit.user.phone}</Text>
           )}
         </View>
 
