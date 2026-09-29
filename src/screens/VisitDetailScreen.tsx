@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
-import { Visit } from '../services/coloniesService';
+import type { Visit } from '../types';
 
 export default function VisitDetailScreen() {
-  const route = useRoute() as any;
+  const route = useRoute<RouteProp<ColoniesStackParamList, 'visit-detail'>>();
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
-  const visit: Visit = route.params?.visit;
+  const visit: Visit = route.params.visit;
 
   if (!visit) return (
     <SafeAreaView className="flex-1 bg-[#F5F5F5]">

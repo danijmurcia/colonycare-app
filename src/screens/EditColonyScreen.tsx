@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useToast } from 'react-native-toast-notifications';
 import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
+import type { Colony } from '../types';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('El nombre es requerido').min(3, 'Mínimo 3 caracteres'),
@@ -16,11 +17,11 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function EditColonyScreen() {
-  const route = useRoute() as any;
+  const route = useRoute<RouteProp<ColoniesStackParamList, 'colony-edit'>>();
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
-  const { colonyId } = route.params || {};
-  const [colony, setColony] = useState<any>(null);
+  const { colonyId } = route.params;
+  const [colony, setColony] = useState<Colony | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 

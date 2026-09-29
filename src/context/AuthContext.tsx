@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { setAuthToken, setOnUnauthorized } from '../services/HttpManager';
 import { authService, UserProfile } from '../services/authService';
+import type { AuthContextType } from '../types/auth';
 
 const storage = {
   getItem: (key: string): Promise<string | null> => {
@@ -20,15 +21,6 @@ const storage = {
 };
 
 const TOKEN_KEY = 'colonycare_token';
-
-interface AuthContextType {
-  token: string | null;
-  user: UserProfile | null;
-  isLoading: boolean;
-  login: (token: string) => Promise<void>;
-  logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
-}
 
 const AuthContext = createContext<AuthContextType | null>(null);
 

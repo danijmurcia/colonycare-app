@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
+import type { Colony, Visit } from '../types';
 
 export default function ColonyDetailScreen() {
-  const route = useRoute() as any;
+  const route = useRoute<RouteProp<ColoniesStackParamList, 'colony-detail'>>();
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
-  const { colonyId } = route.params || {};
-  const [colony, setColony] = useState<any>(null);
-  const [visits, setVisits] = useState<any[]>([]);
+  const { colonyId } = route.params;
+  const [colony, setColony] = useState<Colony | null>(null);
+  const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
 
   useFocusEffect(

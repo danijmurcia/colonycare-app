@@ -1,15 +1,3 @@
-import { NavigatorScreenParams } from '@react-navigation/native';
+import type { ColoniesStackParamList, TabParamList } from '../types';
 
-export type ColoniesStackParamList = {
-  'colonies-list': undefined;
-  'colony-detail': { colonyId: number; colonyName?: string };
-  'colony-create': undefined;
-  'visit-new': { colonyId: number; colonyName?: string };
-  'visit-detail': { visit: any };
-};
-
-export type TabParamList = {
-  home: undefined;
-  colonies: NavigatorScreenParams<ColoniesStackParamList>;
-  profile: undefined;
-};
+export type { ColoniesStackParamList, TabParamList };

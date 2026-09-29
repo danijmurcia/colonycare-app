@@ -28,3 +28,11 @@
 - HttpManager con Axios + interceptores
 - 401 → auto logout via interceptor
 - Error handling con toast notifications
+
+## 📦 Type Safety & API Integration
+- Definir tipos en `src/types/` organizados por dominio (api, auth, colony, visit, navigation)
+- Importar desde barrel export: `import type { Colony, Visit } from '../types'`
+- Reflejar exactamente los schemas de la API (sin divergencias no documentadas)
+- Usar genéricos `ApiResponse<T>` en servicios para responses tipadas
+- NUNCA duplicar tipos entre contextos y módulos de tipos
+- Remover wrappers innecesarios: usar `ApiResponse<Visit>` en lugar de `VisitCreateResponse`

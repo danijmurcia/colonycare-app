@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useToast } from 'react-native-toast-notifications';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { coloniesService } from '../services/coloniesService';
+import { ColoniesStackParamList } from '../navigation/types';
 
 const validationSchema = Yup.object().shape({
   cats_seen: Yup.number()
@@ -22,10 +24,10 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function NewVisitScreen() {
-  const route = useRoute() as any;
-  const navigation = useNavigation();
+  const route = useRoute<RouteProp<ColoniesStackParamList, 'visit-new'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
-  const { colonyId } = route.params || {};
+  const { colonyId } = route.params;
   const [canSize, setCanSize] = useState<'small' | 'large' | null>(null);
   const [foodGrams, setFoodGrams] = useState<200 | 300 | 500 | 1000 | null>(null);
 
@@ -40,10 +42,9 @@ export default function NewVisitScreen() {
         cats_seen: Number(values.cats_seen),
         food_grams: foodGrams,
         wet_food_cans: values.wet_food_cans ? Number(values.wet_food_cans) : undefined,
-        
         notes: values.notes || undefined,
       });
-      toast.show(response.message || 'Visita registrada correctamente', { type: 'success', duration: 2000 });
+      toast.show(response.message, { type: 'success', duration: 2000 });
       navigation.goBack();
     } catch (error: any) {
       toast.show(error.response?.data?.message || 'Error al registrar la visita', { type: 'danger', duration: 2000 });
