@@ -12,8 +12,8 @@ interface RegisterScreenProps {
 }
 
 const registerSchema = Yup.object().shape({
-  first_name: Yup.string().min(2, 'Mínimo 2 caracteres').required('El nombre es requerido'),
-  last_name: Yup.string().min(2, 'Mínimo 2 caracteres').required('El apellido es requerido'),
+  first_name: Yup.string().min(3, 'Mínimo 3 caracteres').required('El nombre es requerido'),
+  last_name: Yup.string().min(3, 'Mínimo 3 caracteres').required('El apellido es requerido'),
   email: Yup.string().email('Email no válido').required('El email es requerido'),
   phone: Yup.string().optional(),
   password: Yup.string().min(6, 'Mínimo 6 caracteres').required('La contraseña es requerida'),

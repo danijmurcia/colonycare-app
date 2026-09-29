@@ -1,5 +1,3 @@
-export type CanSize = 'small' | 'large';
-
 export interface VisitUser {
   id: number;
   email: string;
@@ -16,7 +14,6 @@ export interface Visit {
   cats_seen: number;
   food_grams: number;
   wet_food_cans?: number;
-  can_size?: CanSize;
   notes?: string;
 }
 
@@ -24,6 +21,5 @@ export interface VisitRequest {
   cats_seen: number;
   food_grams: number;
   wet_food_cans?: number;
-  can_size?: CanSize;
   notes?: string;
 }

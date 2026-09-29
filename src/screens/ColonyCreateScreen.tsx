@@ -10,9 +10,18 @@ import { ColoniesStackParamList } from '../navigation/types';
 import { coloniesService } from '../services/coloniesService';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('El nombre es requerido').min(3, 'Mínimo 3 caracteres'),
-  location: Yup.string().required('La ubicación es requerida').min(3, 'Mínimo 3 caracteres'),
-  estimated_cats: Yup.number().required('Número de gatos es requerido').min(1, 'Mínimo 1 gato').integer('Debe ser un número entero'),
+  name: Yup.string()
+    .required('El nombre es requerido')
+    .min(5, 'Mínimo 5 caracteres')
+    .test('no-only-spaces', 'El nombre no puede ser solo espacios', (value) => !value || value.trim().length > 0),
+  location: Yup.string()
+    .required('La ubicación es requerida')
+    .min(5, 'Mínimo 5 caracteres')
+    .test('no-only-spaces', 'La ubicación no puede ser solo espacios', (value) => !value || value.trim().length > 0),
+  estimated_cats: Yup.number()
+    .required('Número de gatos es requerido')
+    .min(1, 'Debe ser mayor a 0')
+    .integer('Debe ser un número entero'),
 });
 
 export default function ColonyCreateScreen() {

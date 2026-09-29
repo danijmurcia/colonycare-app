@@ -8,7 +8,6 @@ export type {
 } from './auth';
 export type { Colony, ColonyCreateRequest, ColonyUpdateRequest } from './colony';
 export type {
-  CanSize,
   VisitUser,
   Visit,
   VisitRequest,

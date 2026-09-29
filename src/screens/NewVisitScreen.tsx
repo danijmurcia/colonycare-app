@@ -18,10 +18,12 @@ const validationSchema = Yup.object().shape({
   food_grams: Yup.string().nullable(),
   wet_food_cans: Yup.number()
     .typeError('Debe ser un número')
-    .min(0, 'No puede ser negativo')
+    .min(0, 'Las latas no pueden ser negativas')
     .nullable()
     .transform((val, orig) => orig === '' ? null : val),
-  notes: Yup.string().max(500, 'Máximo 500 caracteres'),
+  notes: Yup.string()
+    .max(500, 'Máximo 500 caracteres')
+    .nullable(),
 });
 
 export default function NewVisitScreen() {
@@ -29,7 +31,6 @@ export default function NewVisitScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
   const { colonyId } = route.params;
-  const [canSize, setCanSize] = useState<'small' | 'large' | null>(null);
   const [foodGrams, setFoodGrams] = useState<200 | 300 | 500 | 1000 | null>(null);
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {

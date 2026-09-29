@@ -20,12 +20,9 @@ function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
   return <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>{icon}</Text>;
 }
 
-const coloniesStackRef = React.createRef<any>();
-
 function ColoniesStackNavigator() {
   return (
     <ColoniesStack.Navigator
-      ref={coloniesStackRef}
       screenOptions={{ headerShown: false }}
       initialRouteName="colonies-list"
     >
@@ -73,9 +70,9 @@ export default function MainNavigator() {
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate('colonies' as never, {
+            navigation.navigate('colonies', {
               screen: 'colonies-list',
-            } as never);
+            });
           },
         })}
         options={{
