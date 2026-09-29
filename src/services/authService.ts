@@ -9,9 +9,9 @@ export const authService = {
     return response.data;
   },
 
-  register: async (data: RegisterRequest): Promise<RegisterResponse> => {
+  register: async (data: RegisterRequest): Promise<UserProfile> => {
     const response = await httpManager.post<RegisterResponse>('/auth/register', data);
-    return response.data;
+    return response.data.data;
   },
 
   me: async (): Promise<UserProfile> => {

@@ -1,3 +1,5 @@
+import type { ApiResponse } from './api';
+
 export interface UserProfile {
   id: number;
   email: string;
@@ -34,11 +36,4 @@ export interface RegisterRequest {
   phone?: string;
 }
 
-export interface RegisterResponse {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone?: string;
-  is_active: boolean;
-}
+export interface RegisterResponse extends ApiResponse<UserProfile> {}

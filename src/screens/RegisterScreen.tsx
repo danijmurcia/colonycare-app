@@ -37,10 +37,11 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
         last_name: values.last_name,
         phone: values.phone || undefined,
       });
-      toast.show(`Bienvenido ${response.first_name}! Cuenta creada correctamente`, { type: 'success', duration: 3000 });
+      const firstName = response?.first_name || response?.data?.first_name || values.first_name || 'Usuario';
+      toast.show(`¡Bienvenido ${firstName}! Cuenta creada correctamente`, { type: 'success', duration: 3000 });
       onRegisterSuccess();
     } catch (error: any) {
-      const msg = error.response?.data?.detail || 'Error al registrar';
+      const msg = error.response?.data?.message || 'Error al registrar';
       toast.show(msg, { type: 'danger', duration: 3000 });
     } finally {
       setSubmitting(false);
