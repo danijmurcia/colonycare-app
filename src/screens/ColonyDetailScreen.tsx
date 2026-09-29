@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, FlatList, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -17,6 +17,22 @@ export default function ColonyDetailScreen() {
   const [colony, setColony] = useState<Colony | null>(null);
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const handleDeleteConfirm = async () => {
+    try {
+      setDeleting(true);
+      setDeleteModalVisible(false);
+      const message = await coloniesService.delete(colonyId);
+      toast.show(message, { type: 'success', duration: 2000 });
+      navigation.goBack();
+    } catch (error) {
+      toast.show(getErrorMessage(error, 'Error al eliminar colonia'), { type: 'danger', duration: 2000 });
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -69,7 +85,7 @@ export default function ColonyDetailScreen() {
           <Text className="text-base text-gray-400 font-semibold mb-2">🐱 Gatos estimados</Text>
           <Text className="text-lg font-bold text-[#1A1A2E]">{colony.estimated_cats || 0}</Text>
         </View>
-        <View className="flex-row gap-4 mb-8">
+        <View className="flex-row gap-4 mb-4">
           <TouchableOpacity className="flex-1 bg-orange-400 rounded-xl py-4 items-center" onPress={() => navigation.navigate('colony-edit', { colonyId })}>
             <Text className="text-white text-base font-bold">✎ Editar colonia</Text>
           </TouchableOpacity>
@@ -77,6 +93,16 @@ export default function ColonyDetailScreen() {
             <Text className="text-white text-base font-bold">+ Registrar visita</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          className={`bg-red-600 rounded-xl py-4 items-center mb-8${deleting ? ' opacity-60' : ''}`}
+          onPress={() => setDeleteModalVisible(true)}
+          disabled={deleting}
+        >
+          {deleting
+            ? <ActivityIndicator color="#FFF" />
+            : <Text className="text-white text-base font-bold">🗑 Eliminar colonia</Text>
+          }
+        </TouchableOpacity>
         <View className="mb-5">
           <Text className="text-lg font-bold text-[#1A1A2E] mb-4">📋 Historial de visitas ({visits.length})</Text>
           {visits.length === 0 ? (
@@ -110,6 +136,23 @@ export default function ColonyDetailScreen() {
           )}
         </View>
       </ScrollView>
+
+      <Modal transparent animationType="fade" visible={deleteModalVisible} onRequestClose={() => setDeleteModalVisible(false)}>
+        <View className="flex-1 bg-black/50 justify-center items-center px-6">
+          <View className="bg-white rounded-2xl p-6 w-full">
+            <Text className="text-lg font-black text-[#1A1A2E] mb-2">Eliminar colonia</Text>
+            <Text className="text-sm text-gray-500 mb-6">¿Seguro que quieres eliminar "{colony?.name}"? Esta acción no se puede deshacer.</Text>
+            <View className="flex-row gap-3">
+              <TouchableOpacity className="flex-1 bg-gray-100 rounded-xl py-3 items-center" onPress={() => setDeleteModalVisible(false)}>
+                <Text className="text-gray-600 font-semibold">Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className="flex-1 bg-red-600 rounded-xl py-3 items-center" onPress={handleDeleteConfirm}>
+                <Text className="text-white font-bold">Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
