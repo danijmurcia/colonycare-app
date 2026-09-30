@@ -33,7 +33,7 @@ export default function EditVisitScreen() {
     try {
       await visitService.update(colonyId, visit.id, visitData);
       toast.show('Visita actualizada correctamente', { type: 'success', duration: 2000 });
-      navigation.navigate('visit-detail', { colonyId, visitId: visit.id });
+      navigation.goBack();
     } catch (error) {
       toast.show(getErrorMessage(error, 'Error al actualizar la visita'), { type: 'danger', duration: 2000 });
     }
