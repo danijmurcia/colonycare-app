@@ -16,7 +16,7 @@ export default function ColonyDetailScreen() {
   const route = useRoute<RouteProp<ColoniesStackParamList, 'colony-detail'>>();
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
-  const { canDeleteColony, canEditColony } = usePermissions();
+  const { canDeleteColony, canManageColonies } = usePermissions();
   const { colonyId } = route.params;
   const [colony, setColony] = useState<Colony | null>(null);
   const [visits, setVisits] = useState<Visit[]>([]);
@@ -90,7 +90,7 @@ export default function ColonyDetailScreen() {
           <Text className="text-lg font-bold text-[#1A1A2E]">{colony.estimated_cats || 0}</Text>
         </View>
         <View className="flex-row gap-4 mb-4">
-          {canEditColony && (
+          {canManageColonies && (
             <TouchableOpacity className="flex-1 bg-orange-400 rounded-xl py-4 items-center" onPress={() => navigation.navigate('colony-edit', { colonyId })}>
               <Text className="text-white text-base font-bold">✎ Editar colonia</Text>
             </TouchableOpacity>
