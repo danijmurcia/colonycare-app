@@ -19,8 +19,10 @@ function formatDaysAgo(date: string | null | undefined): string {
   if (!date) return "Sin visitas";
   const visitDate = new Date(date);
   const today = new Date();
-  const diffTime = today.getTime() - visitDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  // Comparar solo fechas (ignorar hora)
+  visitDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  const diffDays = Math.floor((today.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24));
   if (diffDays === 0) return "Hoy";
   if (diffDays === 1) return "Ayer";
   return `Hace ${diffDays} días`;
