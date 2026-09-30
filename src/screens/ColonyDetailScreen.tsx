@@ -119,7 +119,7 @@ export default function ColonyDetailScreen() {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   className="bg-white rounded-lg p-4 mb-3"
-                  onPress={() => navigation.navigate('visit-detail', { visit: item })}
+                  onPress={() => navigation.navigate('visit-detail', { visitId: item.id, colonyId })}
                 >
                   <View className="flex-row justify-between items-start">
                     <View className="flex-1">

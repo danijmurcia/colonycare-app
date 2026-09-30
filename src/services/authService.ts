@@ -1,7 +1,7 @@
 import httpManager from './HttpManager';
-import type { ApiResponse, LoginResponse, RegisterRequest, RegisterResponse, UserProfile } from '../types';
+import type { ApiResponse, LoginResponse, RegisterRequest, RegisterResponse, UserProfile, UserStats } from '../types';
 
-export type { UserProfile, LoginResponse, RegisterRequest, RegisterResponse };
+export type { UserProfile, LoginResponse, RegisterRequest, RegisterResponse, UserStats };
 
 export const authService = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
@@ -21,6 +21,11 @@ export const authService = {
 
   updateMe: async (data: { first_name?: string; last_name?: string; phone?: string }): Promise<UserProfile> => {
     const response = await httpManager.put<ApiResponse<UserProfile>>('/auth/me', data);
+    return response.data.data;
+  },
+
+  getStats: async (): Promise<UserStats> => {
+    const response = await httpManager.get<ApiResponse<UserStats>>('/auth/me/stats');
     return response.data.data;
   },
 };

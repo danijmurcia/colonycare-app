@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import httpManager from "../services/HttpManager";
+import { authService } from "../services/authService";
 import type { UserStats } from "../types";
 
 export function useUserStats() {
@@ -9,8 +9,8 @@ export function useUserStats() {
 
   const loadStats = useCallback(async () => {
     try {
-      const response = await httpManager.get<{ data: UserStats }>("/auth/me/stats");
-      setStats(response.data.data);
+      const data = await authService.getStats();
+      setStats(data);
     } catch {
       setStats(null);
     } finally {

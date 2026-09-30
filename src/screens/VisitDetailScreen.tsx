@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView, ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useToast } from 'react-native-toast-notifications';
 import { ColoniesStackParamList } from '../navigation/types';
@@ -18,9 +18,49 @@ export default function VisitDetailScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
   const { user } = useAuth();
+  const { visitId, colonyId } = route.params;
+
+  const [visit, setVisit] = useState<Visit | null>(null);
+  const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const visit: Visit = route.params.visit;
+
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      setLoading(true);
+      visitService.getById(colonyId, visitId)
+        .then((data) => { if (active) setVisit(data); })
+        .catch((error) => {
+          toast.show(getErrorMessage(error, 'Error al cargar la visita'), { type: 'danger', duration: 2000 });
+        })
+        .finally(() => { if (active) setLoading(false); });
+      return () => { active = false; };
+    }, [visitId, colonyId])
+  );
+
+  const handleDeleteConfirm = async () => {
+    if (!visit) return;
+    try {
+      setDeleting(true);
+      setDeleteModalVisible(false);
+      await visitService.delete(colonyId, visit.id);
+      toast.show('Visita eliminada correctamente', { type: 'success', duration: 2000 });
+      navigation.goBack();
+    } catch (error) {
+      toast.show(getErrorMessage(error, 'Error al eliminar la visita'), { type: 'danger', duration: 2000 });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#F5F5F5] justify-center items-center">
+        <ActivityIndicator size="large" color="#E85D04" />
+      </SafeAreaView>
+    );
+  }
 
   if (!visit) {
     return (
@@ -33,24 +73,9 @@ export default function VisitDetailScreen() {
     );
   }
 
-  // Solo el autor o superuser pueden editar/eliminar
   const isOwner = visit.user_id != null && user?.id === visit.user_id;
   const canEdit = !!user && (user.is_superuser || isOwner);
   const canDelete = !!user && (user.is_superuser || isOwner);
-
-  const handleDeleteConfirm = async () => {
-    try {
-      setDeleting(true);
-      setDeleteModalVisible(false);
-      await visitService.delete(visit.colony_id, visit.id);
-      toast.show('Visita eliminada correctamente', { type: 'success', duration: 2000 });
-      navigation.goBack();
-    } catch (error) {
-      toast.show(getErrorMessage(error, 'Error al eliminar la visita'), { type: 'danger', duration: 2000 });
-    } finally {
-      setDeleting(false);
-    }
-  };
 
   const fecha = new Date(visit.date).toLocaleDateString('es-ES', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -112,7 +137,7 @@ export default function VisitDetailScreen() {
         {canEdit && (
           <TouchableOpacity
             className="bg-[#E85D04] rounded-2xl py-4 items-center mb-3"
-            onPress={() => navigation.navigate('visit-edit', { colonyId: visit.colony_id, visit })}
+            onPress={() => navigation.navigate('visit-edit', { colonyId, visitId: visit.id })}
           >
             <Text className="text-white text-base font-bold">✏️ Editar visita</Text>
           </TouchableOpacity>

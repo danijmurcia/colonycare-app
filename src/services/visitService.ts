@@ -7,6 +7,11 @@ export const visitService = {
     return response.data.data;
   },
 
+  getById: async (colonyId: number, visitId: number): Promise<Visit> => {
+    const response = await httpManager.get<ApiResponse<Visit>>(`/colonies/${colonyId}/visits/${visitId}`);
+    return response.data.data;
+  },
+
   create: async (colonyId: number, data: VisitRequest): Promise<ApiResponse<Visit>> => {
     const response = await httpManager.post<ApiResponse<Visit>>(`/colonies/${colonyId}/visits`, data);
     return response.data;

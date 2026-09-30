@@ -1,5 +1,4 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-import type { Visit } from './visit';
 
 export type ColoniesStackParamList = {
   'colonies-list': undefined;
@@ -7,8 +6,8 @@ export type ColoniesStackParamList = {
   'colony-create': undefined;
   'colony-edit': { colonyId: number };
   'visit-new': { colonyId: number; colonyName?: string };
-  'visit-detail': { visit: Visit };
-  'visit-edit': { colonyId: number; visit: Visit };
+  'visit-detail': { visitId: number; colonyId: number };
+  'visit-edit': { colonyId: number; visitId: number };
 };
 
 export type TabParamList = {
