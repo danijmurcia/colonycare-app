@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View, Text, FlatList, TouchableOpacity,
-  RefreshControl, ActivityIndicator, PanResponder, Animated,
+  RefreshControl, ActivityIndicator, PanResponder, Animated, TextInput, TouchableWithoutFeedback, Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -76,6 +76,7 @@ function SwipeableColonyCard({ item, onPress, onDelete, canDelete }: {
 
 export default function ColoniesScreen() {
   const [colonies, setColonies] = useState<Colony[]>([]);
+  const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
@@ -134,6 +135,8 @@ export default function ColoniesScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View className="flex-1">
       <View className="flex-row justify-between items-center px-4 py-3">
         <Text className="text-2xl font-black text-[#1A1A2E]">Colonias</Text>
         {canCreateColony && (
@@ -142,12 +145,22 @@ export default function ColoniesScreen() {
           </TouchableOpacity>
         )}
       </View>
-      {colonies.length === 0 ? (
+      <View className="mx-4 mb-4 px-4 py-3 bg-white rounded-xl border-2 border-[#E85D04] flex-row items-center">
+        <Text className="text-xl mr-3">🔍</Text>
+        <TextInput
+          placeholder="Buscar colonia..."
+          placeholderTextColor="#9CA3AF"
+          value={searchText}
+          onChangeText={setSearchText}
+          className="flex-1 text-base text-[#1A1A2E] font-medium"
+        />
+      </View>
+      {colonies.filter(c => c.name.toLowerCase().includes(searchText.toLowerCase())).length === 0 ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-sm text-gray-400">No hay colonias todavía</Text>
+          <Text className="text-sm text-gray-400">{searchText ? "No encontramos colonias" : "No hay colonias todavía"}</Text>
         </View>
       ) : (
-        <FlatList data={colonies} keyExtractor={(item) => String(item.id)}
+        <FlatList data={colonies.filter(c => c.name.toLowerCase().includes(searchText.toLowerCase()))} keyExtractor={(item) => String(item.id)}
           contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 20 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#E85D04" />}
           renderItem={({ item }) => (
@@ -159,6 +172,8 @@ export default function ColoniesScreen() {
           )}
         />
       )}
+      </View>
+      </TouchableWithoutFeedback>
 
       <DeleteColonyModal
         visible={deleteTarget !== null}
