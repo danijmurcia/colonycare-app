@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 interface Permissions {
   canDeleteColony: boolean;
   canCreateColony: boolean;
+  canEditColony: boolean;
   canManageColonies: boolean;
   isSuperuser: boolean;
 }
@@ -14,6 +15,7 @@ export function usePermissions(): Permissions {
     isSuperuser: user?.is_superuser ?? false,
     canDeleteColony: user?.is_superuser ?? false,
     canCreateColony: user?.is_superuser ?? false,
+    canEditColony: user?.is_superuser ?? false,
     canManageColonies: user?.is_superuser ?? false,
   };
 }
