@@ -15,6 +15,17 @@ import DeleteColonyModal from "../components/DeleteColonyModal";
 const SWIPE_THRESHOLD = 60;
 const DELETE_BTN_WIDTH = 80;
 
+function formatDaysAgo(date: string | null | undefined): string {
+  if (!date) return "Sin visitas";
+  const visitDate = new Date(date);
+  const today = new Date();
+  const diffTime = today.getTime() - visitDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return "Hoy";
+  if (diffDays === 1) return "Ayer";
+  return `Hace ${diffDays} días`;
+}
+
 function SwipeableColonyCard({ item, onPress, onDelete, canDelete }: {
   item: Colony; onPress: () => void; onDelete: () => void; canDelete: boolean;
 }) {
@@ -51,7 +62,10 @@ function SwipeableColonyCard({ item, onPress, onDelete, canDelete }: {
         <TouchableOpacity className="bg-white rounded-xl p-4 border-l-4 border-[#E85D04]" onPress={onPress} activeOpacity={0.8}>
           <Text className="text-base font-bold text-[#1A1A2E] mb-2">{item.name}</Text>
           <Text className="text-sm text-gray-500 mb-1">{item.location}</Text>
-          <Text className="text-sm text-gray-500">{item.estimated_cats || 0} gatos</Text>
+          <View className="flex-row justify-between">
+            <Text className="text-sm text-gray-500">{item.estimated_cats || 0} gatos</Text>
+            <Text className="text-sm text-[#E85D04] font-semibold">{formatDaysAgo(item.last_visit_date)}</Text>
+          </View>
         </TouchableOpacity>
       </Animated.View>
     </View>
