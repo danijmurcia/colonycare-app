@@ -11,6 +11,8 @@ import { visitService } from '../services/visitService';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../utils/errorHandler';
 import DeleteVisitModal from '../components/DeleteVisitModal';
+import PhotoGallery from '../components/PhotoGallery';
+import { photoService } from '../services/photoService';
 import type { Visit } from '../types';
 
 export default function VisitDetailScreen() {
@@ -24,6 +26,7 @@ export default function VisitDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -132,6 +135,18 @@ export default function VisitDetailScreen() {
             <Text className="text-xs text-[#999] font-semibold mb-2">📝 Notas</Text>
             <Text className="text-sm text-[#666]" style={{ lineHeight: 22 }}>{visit.notes}</Text>
           </View>
+        )}
+
+        {visit.photos && visit.photos.length > 0 && (
+          <PhotoGallery
+            photos={visit.photos}
+            colonyId={colonyId}
+            visitId={visit.id}
+            canDelete={false}
+            onPhotoDeleted={(photoId) => {
+              setVisit((prev) => prev ? { ...prev, photos: prev.photos.filter((p) => p.id !== photoId) } : null);
+            }}
+          />
         )}
 
         {canEdit && (

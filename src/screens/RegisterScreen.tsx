@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
 import { Formik } from 'formik';
@@ -50,6 +50,10 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
 
   return (
     <SafeAreaView className="flex-1 bg-[#F8F9FA]">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+      >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 40 }} keyboardShouldPersistTaps="handled">
           <View className="items-center mb-8">
@@ -154,6 +158,7 @@ export default function RegisterScreen({ onRegisterSuccess, onGoToLogin }: Regis
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
@@ -48,8 +51,17 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex-1 justify-between px-6 py-12">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          className="flex-1"
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View className="flex-1 justify-between px-6 py-12">
           <View className="items-center mt-6">
             <Text className="text-8xl mb-4">🐱</Text>
             <Text className="text-5xl font-black text-[#1A1A2E] italic mb-2">ColonyCare</Text>
@@ -125,8 +137,10 @@ export default function LoginScreen({ onGoToRegister }: LoginScreenProps) {
               <Text className="text-[#E85D04] font-bold text-sm">Regístrate</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

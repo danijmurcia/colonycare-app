@@ -66,7 +66,7 @@ function SwipeableColonyCard({ item, onPress, onDelete, canDelete }: {
           <Text className="text-sm text-gray-500 mb-1">{item.location}</Text>
           <View className="flex-row justify-between">
             <Text className="text-sm text-gray-500">{item.estimated_cats || 0} gatos</Text>
-            <Text className="text-sm text-[#E85D04] font-semibold">{formatDaysAgo(item.last_visit_date)}</Text>
+            <Text className="text-sm text-[#E85D04] font-semibold">Última visita: {formatDaysAgo(item.last_visit_date)}</Text>
           </View>
         </TouchableOpacity>
       </Animated.View>

@@ -6,6 +6,14 @@ export interface VisitUser {
   phone?: string;
 }
 
+export interface VisitPhoto {
+  id: number;
+  visit_id: number;
+  photo_key: string;
+  photo_url?: string;
+  created_at: string;
+}
+
 export interface Visit {
   id: number;
   colony_id: number;
@@ -16,6 +24,7 @@ export interface Visit {
   food_grams: number;
   wet_food_cans?: number;
   notes?: string;
+  photos?: VisitPhoto[];
 }
 
 export interface VisitRequest {

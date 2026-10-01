@@ -9,6 +9,7 @@ export type {
 export type { Colony, ColonyCreateRequest, ColonyUpdateRequest } from './colony';
 export type {
   VisitUser,
+  VisitPhoto,
   Visit,
   VisitRequest,
   UserStats,
