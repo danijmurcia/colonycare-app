@@ -1,48 +1,40 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ColoniesStackParamList } from '../navigation/types';
-import { useToast } from 'react-native-toast-notifications';
-import { coloniesService } from '../services/coloniesService';
-import { visitService } from '../services/visitService';
-import { getErrorMessage } from '../utils/errorHandler';
-import { usePermissions } from '../hooks/usePermissions';
-import DeleteColonyModal from '../components/DeleteColonyModal';
-import type { Colony, Visit } from '../types';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+  RouteProp,
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useToast } from "react-native-toast-notifications";
+import { coloniesService } from "../services/coloniesService";
+import { visitService } from "../services/visitService";
+import { getErrorMessage } from "../utils/errorHandler";
+import { ColoniesStackParamList } from "../navigation/types";
+import ColonyDetailsTab from "../components/ColonyDetailsTab";
+import CatsTab from "../components/CatsTab";
+import type { Colony, Visit } from "../types";
+
+type TabName = "detalles" | "gatos";
 
 export default function ColonyDetailScreen() {
-  const route = useRoute<RouteProp<ColoniesStackParamList, 'colony-detail'>>();
-  const navigation = useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
+  const route = useRoute<RouteProp<ColoniesStackParamList, "colony-detail">>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ColoniesStackParamList>>();
   const toast = useToast();
-  const { canDeleteColony, canManageColonies } = usePermissions();
   const { colonyId } = route.params;
   const [colony, setColony] = useState<Colony | null>(null);
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
-  const [deleting, setDeleting] = useState(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
-  const handleDeleteConfirm = async () => {
-    try {
-      setDeleting(true);
-      setDeleteModalVisible(false);
-      const message = await coloniesService.delete(colonyId);
-      toast.show(message, { type: 'success', duration: 2000 });
-      navigation.goBack();
-    } catch (error) {
-      toast.show(getErrorMessage(error, 'Error al eliminar colonia'), { type: 'danger', duration: 2000 });
-    } finally {
-      setDeleting(false);
-    }
-  };
+  const [activeTab, setActiveTab] = useState<TabName>("detalles");
 
   useFocusEffect(
     React.useCallback(() => {
       setLoading(true);
       loadColonyData();
-    }, [colonyId])
+    }, [colonyId]),
   );
 
   const loadColonyData = async () => {
@@ -54,104 +46,74 @@ export default function ColonyDetailScreen() {
       setColony(colonyData);
       setVisits(visitsData || []);
     } catch (error) {
-      toast.show(getErrorMessage(error, 'Error al cargar colonia'), { type: 'danger', duration: 2000 });
+      toast.show(getErrorMessage(error, "Error al cargar colonia"), {
+        type: "danger",
+        duration: 2000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <View className="flex-1 justify-center items-center"><ActivityIndicator size="large" color="#E85D04" /></View>;
-
-  if (!colony) return (
-    <SafeAreaView className="flex-1 bg-slate-50">
-      <TouchableOpacity className="p-1" onPress={() => navigation.goBack()}>
-        <Text className="text-base text-[#E85D04] font-bold">← Volver</Text>
-      </TouchableOpacity>
-      <Text className="text-sm text-gray-400 text-center mt-5">No se pudo cargar la colonia</Text>
-    </SafeAreaView>
-  );
+  if (loading)
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#E85D04" />
+      </View>
+    );
+  if (!colony)
+    return (
+      <SafeAreaView className="flex-1 bg-slate-50">
+        <TouchableOpacity className="p-3" onPress={() => navigation.goBack()}>
+          <Text className="text-[#E85D04] font-bold">← Volver</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
       <View className="flex-row justify-between items-center px-4 py-3">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text className="text-base text-[#E85D04] font-bold">← Volver</Text>
+          <Text className="text-[#E85D04] font-bold">← Volver</Text>
         </TouchableOpacity>
-        <Text className="text-lg font-black text-[#1A1A2E] flex-1 text-center">{colony.name}</Text>
+        <Text className="text-lg font-bold text-[#1A1A2E] flex-1 text-center">
+          {colony.name}
+        </Text>
         <View />
       </View>
-      <ScrollView className="flex-1 px-4 py-3">
-        <View className="bg-white rounded-xl p-5 mb-4">
-          <Text className="text-base text-gray-400 font-semibold mb-2">📍 Localizacion</Text>
-          <Text className="text-lg font-bold text-[#1A1A2E]">{colony.location}</Text>
-        </View>
-        <View className="bg-white rounded-xl p-5 mb-4">
-          <Text className="text-base text-gray-400 font-semibold mb-2">🐱 Gatos estimados</Text>
-          <Text className="text-lg font-bold text-[#1A1A2E]">{colony.estimated_cats || 0}</Text>
-        </View>
-        <View className="flex-row gap-4 mb-4">
-          {canManageColonies && (
-            <TouchableOpacity className="flex-1 bg-orange-400 rounded-xl py-4 items-center" onPress={() => navigation.navigate('colony-edit', { colonyId })}>
-              <Text className="text-white text-base font-bold">✎ Editar colonia</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity className="flex-1 bg-[#E85D04] rounded-xl py-4 items-center" onPress={() => navigation.navigate('visit-new', { colonyId })}>
-            <Text className="text-white text-base font-bold">+ Registrar visita</Text>
-          </TouchableOpacity>
-        </View>
-        {canDeleteColony && (
-          <TouchableOpacity
-            className={`bg-red-600 rounded-xl py-4 items-center mb-8${deleting ? ' opacity-60' : ''}`}
-            onPress={() => setDeleteModalVisible(true)}
-            disabled={deleting}
+      <View className="flex-row border-b border-gray-200 bg-white">
+        <TouchableOpacity
+          className={`flex-1 py-3 items-center border-b-2 ${activeTab === "detalles" ? "border-[#E85D04]" : "border-transparent"}`}
+          onPress={() => setActiveTab("detalles")}
+        >
+          <Text
+            className={`font-semibold text-sm ${activeTab === "detalles" ? "text-[#E85D04]" : "text-gray-400"}`}
           >
-            {deleting
-              ? <ActivityIndicator color="#FFF" />
-              : <Text className="text-white text-base font-bold">🗑 Eliminar colonia</Text>
-            }
-          </TouchableOpacity>
+            Colonia
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className={`flex-1 py-3 items-center border-b-2 ${activeTab === "gatos" ? "border-[#E85D04]" : "border-transparent"}`}
+          onPress={() => setActiveTab("gatos")}
+        >
+          <Text
+            className={`font-semibold text-sm ${activeTab === "gatos" ? "text-[#E85D04]" : "text-gray-400"}`}
+          >
+            Gatos
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View className="flex-1">
+        {activeTab === "detalles" && (
+          <ColonyDetailsTab
+            colony={colony}
+            visits={visits}
+            colonyId={colonyId}
+            onColonyDeleted={() => navigation.goBack()}
+          />
         )}
-        <View className="mb-5">
-          <Text className="text-lg font-bold text-[#1A1A2E] mb-4">📋 Historial de visitas ({visits.length})</Text>
-          {visits.length === 0 ? (
-            <Text className="text-base text-gray-400 italic">Sin visitas registradas</Text>
-          ) : (
-            <FlatList
-              data={visits}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  className="bg-white rounded-lg p-4 mb-3"
-                  onPress={() => navigation.navigate('visit-detail', { visitId: item.id, colonyId })}
-                >
-                  <View className="flex-row justify-between items-start">
-                    <View className="flex-1">
-                      <Text className="text-base font-bold text-[#E85D04]">
-                        {new Date(item.date).toLocaleDateString('es-ES')}
-                      </Text>
-                      <Text className="text-sm text-gray-500 mt-1">
-                        {item.cats_seen || 0} gatos · {item.notes || 'Sin notas'}
-                      </Text>
-                    </View>
-                    <Text className="text-sm font-semibold text-gray-400 text-right w-2/5">
-                      {item.user?.first_name} {item.user?.last_name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, i) => String(i)}
-              scrollEnabled={false}
-            />
-          )}
-        </View>
-      </ScrollView>
-
-      <DeleteColonyModal
-        visible={deleteModalVisible}
-        colonyName={colony?.name ?? ''}
-        deleting={deleting}
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setDeleteModalVisible(false)}
-      />
+        {activeTab === "gatos" && <CatsTab />}
+      </View>
     </SafeAreaView>
   );
 }

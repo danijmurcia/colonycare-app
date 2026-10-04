@@ -47,7 +47,7 @@ export default function EditVisitScreen() {
     try {
       const compressed = await imageCompressionService.compressImage(imageUri);
       const fileName = `photo_${Date.now()}.jpg`;
-      setPendingPhotos((prev) => [...prev, { uri: compressed, fileName, state: 'pending', progress: 0 }]);
+      setPendingPhotos((prev) => [...prev, { uri: compressed.uri, fileName, state: 'pending', progress: 0 }]);
     } catch (error) {
       toast.show(getErrorMessage(error, 'Error al procesar imagen'), { type: 'danger' });
     }
@@ -114,8 +114,14 @@ export default function EditVisitScreen() {
         Alert.alert('Permiso necesario', 'La app necesita acceso a la cámara.');
         return;
       }
-      const result = await ImagePicker.launchCameraAsync({ allowsEditing: true, aspect: [4, 3] });
-      if (!result.canceled && result.assets[0]) await compressAndAdd(result.assets[0].uri);
+      const result = await ImagePicker.launchCameraAsync({ allowsEditing: true, aspect: [4, 3], quality: 0.8 });
+      if (!result.canceled && result.assets[0]) {
+        await compressAndAdd(result.assets[0].uri);
+        toast.show('Foto capturada ✓', { type: 'success', duration: 1500 });
+      }
+    } catch (error) {
+      console.error('Error al capturar foto:', error);
+      toast.show(getErrorMessage(error, 'Error al capturar imagen'), { type: 'danger' });
     } finally {
       setLoadingPicker(false);
     }
@@ -129,8 +135,14 @@ export default function EditVisitScreen() {
         Alert.alert('Permiso necesario', 'La app necesita acceso a la galería.');
         return;
       }
-      const result = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, aspect: [4, 3] });
-      if (!result.canceled && result.assets[0]) await compressAndAdd(result.assets[0].uri);
+      const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: 'images', allowsEditing: true, aspect: [4, 3], quality: 0.8 });
+      if (!result.canceled && result.assets[0]) {
+        await compressAndAdd(result.assets[0].uri);
+        toast.show('Imagen añadida ✓', { type: 'success', duration: 1500 });
+      }
+    } catch (error) {
+      console.error('Error al seleccionar foto de galería:', error);
+      toast.show(getErrorMessage(error, 'Error al seleccionar imagen'), { type: 'danger' });
     } finally {
       setLoadingPicker(false);
     }
