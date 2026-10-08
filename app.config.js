@@ -12,11 +12,11 @@ module.exports = {
     extra: {
       apiUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000',
       eas: {
-        projectId: process.env.EXPO_PROJECT_ID || '',
+        projectId: '0b488585-a5e3-4078-9905-1023f11431a0',
       },
     },
     updates: {
-      url: 'https://u.expo.dev/' + (process.env.EXPO_PROJECT_ID || ''),
+      url: 'https://u.expo.dev/0b488585-a5e3-4078-9905-1023f11431a0',
       enabled: true,
       fallbackToCacheTimeout: 0,
     },
