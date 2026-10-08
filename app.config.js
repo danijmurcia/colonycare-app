@@ -10,7 +10,18 @@ module.exports = {
     web: {},
     plugins: ['expo-secure-store'],
     extra: {
-      apiUrl: process.env.REACT_APP_API_URL || 'http://localhost:8000',
+      apiUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000',
+      eas: {
+        projectId: process.env.EXPO_PROJECT_ID || '',
+      },
+    },
+    updates: {
+      url: 'https://u.expo.dev/' + (process.env.EXPO_PROJECT_ID || ''),
+      enabled: true,
+      fallbackToCacheTimeout: 0,
+    },
+    runtimeVersion: {
+      policy: 'appVersion',
     },
   },
 };
